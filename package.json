@@ -2,10 +2,31 @@
   "name": "server",
   "version": "1.0.0",
   "description": "fully functional rest api for ecommerce website",
-  "main": "server.js",
+  "main": "dist/server.js",
   "scripts": {
+    "build": "tsc",
+    "dev": "npx ts-node server.ts",
+    "start": "tsc && node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Karim Muhammad",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.10.0",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.5.4",
+    "eslint": "^9.10.0",
+    "globals": "^15.9.0",
+    "nodemon": "^3.1.4",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.5.0"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.0.0",
+    "@mongez/monpulse": "^1.0.42",
+    "bcrypt": "^5.1.1",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.20.0"
+  }
 }
