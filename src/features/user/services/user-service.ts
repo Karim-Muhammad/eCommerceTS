@@ -1,8 +1,10 @@
-import AuthService from "./auth-service";
+import UserRepository from "../repository";
 
-class UserServices extends AuthService {
+class UserServices {
+  private readonly userRepository: UserRepository;
+
   constructor() {
-    super();
+    this.userRepository = new UserRepository();
   }
 }
 

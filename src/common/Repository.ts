@@ -1,13 +1,12 @@
-import { HydratedDocument, Model } from "mongoose";
+import { Model } from "mongoose";
 
-class Repository<ModelType> {
-  private Model: Model<ModelType>;
-  constructor(Model: Model<ModelType>) {
+class Repository<TDocument> {
+  private Model: Model<TDocument>;
+  constructor(Model: Model<TDocument>) {
     this.Model = Model;
   }
 
-  // UserProfile
-  create(data: ModelType): Promise<HydratedDocument<ModelType>> {
+  create(data: TDocument): Promise<TDocument> {
     return this.Model.create(data);
   }
 }

@@ -1,15 +1,14 @@
-import { connectToDatabase, onceConnected } from "@mongez/monpulse";
+import { connect } from "mongoose";
 import config from "../config";
 
 async function connectDatabase() {
-  onceConnected(() => {
-    console.log("Successfully Connected to Database!");
-  });
-
-  connectToDatabase({
-    url: config.db_uri,
-    database: config.db_name,
-  });
+  connect(config.db_uri)
+    .then(() => {
+      console.log("Database connected");
+    })
+    .catch((error) => {
+      console.log("Database connection failed", error);
+    });
 }
 
 export default connectDatabase;

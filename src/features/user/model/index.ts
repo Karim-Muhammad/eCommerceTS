@@ -1,4 +1,10 @@
-import "./profile-schema";
-import "./auth-schema";
-import "./email-verification";
-import "./password-reset";
+import { model } from "mongoose";
+import UserSchema from "./schema";
+import IUser from "./type";
+
+import "./hooks";
+import "./methods";
+
+const UserModel = model<IUser>("User", UserSchema);
+
+export default UserModel;

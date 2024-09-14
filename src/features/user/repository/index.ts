@@ -1,18 +1,14 @@
-import { Document, Types } from "mongoose";
 import Repository from "../../../common/Repository";
-import UserAccount, { UserAccountModel } from "../model/auth-schema";
+import UserModel from "../model";
+import IUser from "../model/type";
 
-class UserRepository extends Repository<UserAccountModel> {
+class UserRepository extends Repository<IUser> {
   constructor() {
-    super(UserAccount);
+    super(UserModel);
   }
-  create(
-    data: UserAccountModel
-  ): Promise<
-    Document<unknown, {}, UserAccountModel> &
-      UserAccountModel & { _id: Types.ObjectId }
-  > {
-    return this.Model.create(data);
+
+  create(data: IUser): Promise<IUser> {
+    return super.create(data);
   }
 }
 

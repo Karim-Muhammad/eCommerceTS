@@ -1,10 +1,14 @@
 import express, { Application } from "express";
+import morgran from "morgan";
 
 import dotenv from "dotenv";
 dotenv.config();
 
 import config from "../config";
 import connectDatabase from "../database";
+
+// Features
+import userRoute from "./features/user/route";
 
 class App {
   private app: Application;
@@ -20,8 +24,11 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use("/static", express.static(`${config.static}`));
+    this.app.use(morgran("dev"));
   }
-  private setupRoutesMiddlewares() {}
+  private setupRoutesMiddlewares() {
+    this.app.use("/users", userRoute);
+  }
 
   public start() {
     this.setupDatabase();
