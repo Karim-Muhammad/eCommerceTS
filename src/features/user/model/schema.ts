@@ -1,7 +1,6 @@
-import { Schema } from "mongoose";
-import IUser from "./type";
+import { InferSchemaType, Schema } from "mongoose";
 
-const UserSchema = new Schema<IUser>({
+const UserSchema = new Schema({
   first_name: {
     type: String,
     required: true,
@@ -23,5 +22,7 @@ const UserSchema = new Schema<IUser>({
     required: true,
   },
 });
+
+export type IUser = InferSchemaType<typeof UserSchema>;
 
 export default UserSchema;

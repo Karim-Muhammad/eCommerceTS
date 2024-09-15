@@ -1,20 +1,16 @@
 import ErrorAPI from "../../../common/ErrorAPI";
-import AuthService from "../services/auth-service";
-import UserServices from "../services/user-service";
+import UserRepository from "../repository";
 
 class UserController {
-  private readonly authService: AuthService;
-  private readonly userService: UserServices;
+  private readonly userRepository: UserRepository;
   constructor() {
-    this.authService = new AuthService();
-    this.userService = new UserServices();
+    this.userRepository = new UserRepository();
   }
 
-  register() {
-    return async (request, response, next) => {
+  getAllUser() {
+    return async (req, res, next) => {
       try {
-        const user = await this.authService.register()(request);
-        response.status(201).json(user);
+        const data = this.userRepository.read;
       } catch (error) {
         next(ErrorAPI.badRequest(error.message));
       }

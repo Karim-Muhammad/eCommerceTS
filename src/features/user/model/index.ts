@@ -1,6 +1,5 @@
 import { model } from "mongoose";
-import UserSchema from "./schema";
-import IUser from "./type";
+import UserSchema, { IUser } from "./schema";
 
 import "./hooks";
 import "./methods";
