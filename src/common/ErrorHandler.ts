@@ -1,49 +1,44 @@
 import { Request, Response, NextFunction } from "express";
 import config from "../../config";
-
-interface DevelopmentError {
-  message: string;
-  statusCode: number;
-  stack: string;
-}
-
-interface ProductionError {
-  message: string;
-  statusCode: number;
-}
+import ErrorAPI from "./ErrorAPI";
 
 class ErrorHandler {
   private static environment: string = config.env;
 
   static handle() {
     return (
-      errors: DevelopmentError,
+      incomingErrors: ErrorAPI,
       request: Request,
       response: Response,
       next: NextFunction // eslint-disable-line
     ) => {
+      let errors: Partial<ErrorAPI> = incomingErrors;
+
       if (this.environment === "development") {
-        errors = ErrorHandler.handleDev(errors);
+        errors = ErrorHandler.handleDev(incomingErrors);
       }
 
       if (this.environment === "production") {
-        errors = ErrorHandler.handleProd(errors) as DevelopmentError;
+        errors = ErrorHandler.handleProd(incomingErrors);
       }
 
       return response.status(errors.statusCode).json({ errors: errors });
     };
   }
 
-  static handleDev(errors: DevelopmentError): DevelopmentError {
+  static handleDev(errors: ErrorAPI): Partial<ErrorAPI> {
+    // console.log(errors);
+
     return {
       message: errors.message,
+      pack: errors.pack,
       statusCode: errors.statusCode,
       stack: errors.stack,
     };
   }
-  static handleProd(errors: DevelopmentError): ProductionError {
+  static handleProd(errors: ErrorAPI): Partial<ErrorAPI> {
     return {
-      message: errors.message,
+      pack: errors.pack,
       statusCode: errors.statusCode,
     };
   }

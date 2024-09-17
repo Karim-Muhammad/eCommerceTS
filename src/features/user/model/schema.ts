@@ -1,6 +1,7 @@
-import { InferSchemaType, Schema } from "mongoose";
+import { Schema } from "mongoose";
+import { IUserMethods, IUserModel, IUser as IUserType } from "../types";
 
-const UserSchema = new Schema({
+const UserSchema = new Schema<IUserType, IUserModel, IUserMethods>({
   first_name: {
     type: String,
     required: true,
@@ -21,8 +22,13 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+
+  mobile: {
+    type: String,
+    unique: true,
+  },
 });
 
-export type IUser = InferSchemaType<typeof UserSchema>;
+export type IUser = IUserType;
 
 export default UserSchema;

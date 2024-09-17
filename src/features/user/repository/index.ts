@@ -1,8 +1,8 @@
 import Repository from "../../../common/Repository";
 import UserModel from "../model";
-import { IUser } from "../model/schema";
+import { IUserDocument } from "../types";
 
-class UserRepository extends Repository<IUser> {
+class UserRepository extends Repository<IUserDocument> {
   constructor() {
     super(UserModel);
   }

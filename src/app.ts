@@ -8,7 +8,7 @@ import config from "../config";
 import connectDatabase from "../database";
 
 // Features
-import userRoute from "./features/user/route";
+import apps from "./features";
 
 class App {
   private app: Application;
@@ -27,7 +27,7 @@ class App {
     this.app.use(morgran("dev"));
   }
   private setupRoutesMiddlewares() {
-    this.app.use("/users", userRoute);
+    this.app.use("/", apps);
   }
 
   public start() {
