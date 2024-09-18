@@ -5,7 +5,13 @@
     "target": "es6",
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "typeRoots": ["./node_modules/@types", "./src/@types", "@types"]
   },
-  "lib": ["es2015"]
+  "lib": ["es2015"],
+  "include": [
+    "src/**/*.ts",
+    "src/@types/express/index.d.ts",
+    "./@types/express/index.d.ts"
+  ]
 }

@@ -1,6 +1,6 @@
-1. Register
-2. Login
-3. Get Profile
+1. Register [DONE]
+2. Login [DONE]
+3. Get Profile [DONE]
 4. Update Profile
 5. Delete Profile
-6. Get all users
+6. Get all users [DONE]

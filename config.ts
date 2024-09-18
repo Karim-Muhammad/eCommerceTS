@@ -10,4 +10,6 @@ export default {
 
   db_uri: process.env.DB_ATLAS_URI,
   db_name: process.env.DB_NAME,
+
+  secret_key: process.env.SECRET_KEY,
 };

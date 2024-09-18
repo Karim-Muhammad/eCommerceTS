@@ -5,11 +5,14 @@ export interface IUser {
   last_name: string;
   email: string;
   password: string;
+  passwordChangedAt: number;
   mobile?: string;
+  role: string;
 }
 
 export interface IUserMethods {
   comparePassword: (password: string) => Promise<boolean>;
+  isTokenUpToDate: (tokenDate: number) => boolean;
 }
 
 export interface IUserDocument extends IUser, Document, IUserMethods {

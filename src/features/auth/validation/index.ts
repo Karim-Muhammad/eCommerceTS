@@ -2,6 +2,7 @@ import { body } from "express-validator";
 import Validations from "../../../common/Validations";
 import { customMessage } from "../../../common/helpers";
 import UserModel from "../../user/model";
+import { PASSWORD_REGEX } from "../../../common/constants";
 
 class AuthValidations extends Validations {
   constructor() {
@@ -31,12 +32,38 @@ class AuthValidations extends Validations {
         }),
 
       body("password")
-        .isStrongPassword({ returnScore: true })
+        .matches(PASSWORD_REGEX)
         .withMessage(
-          "should be strong password(uppercase, lowercase, number, special character)"
+          "should be strong password(uppercase, lowercase, number, special character, min 8 characters)"
         )
         .bail(),
       body("mobile").optional().isMobilePhone("ar-EG"),
+
+      this.validate(),
+    ];
+  }
+
+  public changePassword() {
+    return [
+      body("old-password").notEmpty().withMessage("Old Password is required"),
+      body("new-password")
+        .notEmpty()
+        .withMessage("New Password is required")
+        .bail()
+        .matches(PASSWORD_REGEX)
+        .withMessage(
+          "should be strong password(uppercase, lowercase, number, special character, min 8 characters)"
+        ),
+      body("new-password-confirmation")
+        .notEmpty()
+        .withMessage("New Password Confirmation is reuqired")
+        .bail()
+        .custom((value, { req }) => {
+          if (req.body["new-password"] !== value)
+            throw Error("new-password and confirmation is not matched!");
+
+          return true;
+        }),
 
       this.validate(),
     ];
