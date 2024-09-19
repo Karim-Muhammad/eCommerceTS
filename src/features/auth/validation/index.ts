@@ -77,7 +77,7 @@ class AuthValidations extends Validations {
     });
   }
 
-  static getInstance() {
+  public static getInstance() {
     return new AuthValidations();
   }
 }

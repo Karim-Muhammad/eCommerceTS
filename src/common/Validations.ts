@@ -24,6 +24,10 @@ class Validations {
       next();
     };
   }
+
+  public static getInstance() {
+    return new Validations();
+  }
 }
 
 export default Validations;
