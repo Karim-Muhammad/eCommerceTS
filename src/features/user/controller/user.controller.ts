@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import ErrorAPI from "../../../common/ErrorAPI";
 import UserRepository from "../repository";
+import { apiResponse } from "../../../common/helpers";
 
 class UserController {
   private readonly userRepository: UserRepository;
@@ -72,6 +73,49 @@ class UserController {
       });
     } catch (error) {
       next(ErrorAPI.badRequest(error.message));
+    }
+  };
+
+  block = async (req: Request, res: Response, next) => {
+    const { id } = req.body;
+    const currentUser = req.user;
+
+    try {
+      const targetUser = await this.userRepository.readOne({ _id: id });
+      if (targetUser._id === currentUser.id)
+        next(ErrorAPI.badRequest("You cannot block yourself!"));
+
+      targetUser.status = false;
+      await await targetUser.save();
+      return apiResponse(
+        res,
+        200,
+        `You blocked the user <${currentUser.first_name}>`
+      );
+    } catch (error) {
+      next(ErrorAPI.internal(error.message));
+    }
+  };
+
+  unblock = async (req: Request, res: Response, next) => {
+    const { id } = req.body;
+    const currentUser = req.user;
+
+    try {
+      const targetUser = await this.userRepository.readOne({ _id: id });
+      if (targetUser._id === currentUser.id)
+        return next(ErrorAPI.badRequest("You cannot unblock yourself!"));
+
+      targetUser.status = true;
+      targetUser.save();
+
+      return apiResponse(
+        res,
+        200,
+        `You unblocked the user <${currentUser.first_name}>`
+      );
+    } catch (error) {
+      next(ErrorAPI.internal(error.message));
     }
   };
 }

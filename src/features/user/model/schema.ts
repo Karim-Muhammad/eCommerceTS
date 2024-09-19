@@ -18,6 +18,10 @@ const UserSchema = new Schema<IUserType, IUserModel, IUserMethods>({
     unique: true,
   },
 
+  // emailVerifiedAt: {
+  //   type: Date,
+  // },
+
   password: {
     type: String,
     required: true,
@@ -38,6 +42,25 @@ const UserSchema = new Schema<IUserType, IUserModel, IUserMethods>({
     type: String,
     default: "user",
   },
+
+  status: {
+    type: Boolean,
+    default: true,
+  },
+
+  wishlist: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+    },
+  ],
+
+  address: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Address",
+    },
+  ],
 });
 
 export type IUser = IUserType;

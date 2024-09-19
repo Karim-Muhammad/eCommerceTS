@@ -8,6 +8,9 @@ export interface IUser {
   passwordChangedAt: number;
   mobile?: string;
   role: string;
+  status: boolean;
+  wishlist: string[];
+  address: string[];
 }
 
 export interface IUserMethods {
