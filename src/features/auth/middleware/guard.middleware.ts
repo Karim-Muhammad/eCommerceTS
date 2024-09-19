@@ -40,7 +40,9 @@ class GuardMiddlewares {
         );
 
       // 4. Check if PasswordChangedAt updated than `iat` of token
-      console.log(user.passwordChangedAt / 1000, payload.iat);
+      console.log("Token iat: ", payload.iat);
+      console.log("PasswordChangedAt: ", user.passwordChangedAt);
+
       if (!user.isTokenUpToDate(payload.iat)) {
         return next(
           ErrorAPI.unauthorized(
@@ -62,9 +64,22 @@ class GuardMiddlewares {
   reverseGuard() {
     return (req: Request, res: Response, next: NextFunction) => {
       if (req.headers.authorization)
-        throw ErrorAPI.unauthorized("You are already logged in.");
+        return next(ErrorAPI.unauthorized("You are already logged in."));
 
       next();
+    };
+  }
+
+  adminGuard() {
+    return (req: Request, res: Response, next: NextFunction) => {
+      this.guard()(req, res, (error) => {
+        if (error) return next(error);
+
+        if (req.user.role !== "admin")
+          return next(ErrorAPI.unauthorized("You are not allowed!"));
+
+        next();
+      });
     };
   }
 }

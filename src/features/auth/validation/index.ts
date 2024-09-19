@@ -12,14 +12,14 @@ class AuthValidations extends Validations {
   public register() {
     return [
       body("first_name")
-        .isString()
-        .withMessage(customMessage("should be string"))
+        .notEmpty()
+        .withMessage(customMessage("first name is required, should be string"))
         .bail()
         .isLength({ min: 3, max: 20 })
         .withMessage("should be between 3 to 20 characters"),
       body("last_name")
-        .isString()
-        .withMessage("should be string")
+        .notEmpty()
+        .withMessage("last name is required, should be string")
         .bail()
         .isLength({ min: 3, max: 20 })
         .withMessage("should be between 3 to 20 characters"),
@@ -76,6 +76,10 @@ class AuthValidations extends Validations {
       return true;
     });
   }
+
+  static getInstance() {
+    return new AuthValidations();
+  }
 }
 
-export default new AuthValidations();
+export default AuthValidations;

@@ -6,11 +6,12 @@ import ErrorAPI from "../../../common/ErrorAPI";
 type Payload =
   | JwtPayload & {
       id: number;
+      role: string;
     };
 
 class JWTServices {
   static sign(payload: Payload) {
-    return jwt.sign({ id: payload.id }, config.secret_key, {
+    return jwt.sign(payload, config.secret_key, {
       expiresIn: "1d",
     });
   }
