@@ -20,8 +20,8 @@
 | GET    | /users/:id         | Get a user     | ✅     |
 | PUT    | /users/:id         | Update a user  | ✅     |
 | DELETE | /users/:id         | Delete a user  | ✅     |
-| PATCH  | /users/:id/block   | Block a user   | ❌     |
-| PATCH  | /users/:id/unblock | Unblock a user | ❌     |
+| POST   | /users/:id/block   | Block a user   | ✅     |
+| POST   | /users/:id/unblock | Unblock a user | ✅     |
 
 #### TODOS
 

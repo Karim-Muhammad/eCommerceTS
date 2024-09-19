@@ -77,12 +77,13 @@ class UserController {
   };
 
   block = async (req: Request, res: Response, next) => {
-    const { id } = req.body;
+    const { id } = req.params;
     const currentUser = req.user;
 
     try {
       const targetUser = await this.userRepository.readOne({ _id: id });
-      if (targetUser._id === currentUser.id)
+
+      if (targetUser.id === currentUser.id)
         next(ErrorAPI.badRequest("You cannot block yourself!"));
 
       targetUser.status = false;
@@ -98,12 +99,12 @@ class UserController {
   };
 
   unblock = async (req: Request, res: Response, next) => {
-    const { id } = req.body;
+    const { id } = req.params;
     const currentUser = req.user;
-
     try {
       const targetUser = await this.userRepository.readOne({ _id: id });
-      if (targetUser._id === currentUser.id)
+
+      if (targetUser.id === currentUser.id)
         return next(ErrorAPI.badRequest("You cannot unblock yourself!"));
 
       targetUser.status = true;
