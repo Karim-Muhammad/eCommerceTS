@@ -8,6 +8,7 @@ class Validations {
   protected validate() {
     return (req, res, next) => {
       const _errors = validationResult(req);
+      console.log(_errors);
 
       if (!_errors.isEmpty()) {
         const errors = _errors.array().map((error: FieldValidationError) => ({
