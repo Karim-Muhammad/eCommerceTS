@@ -9,13 +9,17 @@ export interface IUser {
   mobile?: string;
   role: string;
   status: boolean;
+  refreshToken: string;
   wishlist: string[];
   address: string[];
 }
 
 export interface IUserMethods {
   comparePassword: (password: string) => Promise<boolean>;
+  compareRefreshToken: (refreshToken: string) => Promise<boolean>;
   isTokenUpToDate: (tokenDate: number) => boolean;
+  generateAccessToken: () => string;
+  generateRefreshToken: () => string;
 }
 
 export interface IUserDocument extends IUser, Document, IUserMethods {

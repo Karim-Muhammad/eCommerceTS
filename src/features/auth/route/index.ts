@@ -15,6 +15,10 @@ router.post(
 
 router.post("/login", guardMiddleware.reverseGuard(), AuthController.login);
 
+router.post("/refresh", guardMiddleware.guard(), AuthController.refreshToken);
+
+router.post("/logout", guardMiddleware.guard(), AuthController.logout);
+
 router.patch(
   "/change-password",
   guardMiddleware.guard(),

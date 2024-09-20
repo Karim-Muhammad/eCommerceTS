@@ -3,16 +3,20 @@ import config from "../../../../config";
 import UserRepository from "../../user/repository";
 import ErrorAPI from "../../../common/ErrorAPI";
 
-type Payload =
+export type Payload =
   | JwtPayload & {
       id: number;
       role: string;
     };
 
 class JWTServices {
-  static sign(payload: Payload) {
-    return jwt.sign(payload, config.secret_key, {
-      expiresIn: "1d",
+  static sign(
+    payload: Payload,
+    secret: string = config.secret_key,
+    expiresIn = "1d"
+  ) {
+    return jwt.sign(payload, secret, {
+      expiresIn,
     });
   }
 
@@ -26,6 +30,22 @@ class JWTServices {
       }
 
       throw ErrorAPI.unauthorized("Invalid Token!");
+    }
+  }
+
+  static isExpired(token: string) {
+    try {
+      JWTServices.verify(token);
+      return false;
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        return true;
+      }
+
+      // throw ErrorAPI.unauthorized("Invalid Token!");
+      return true;
+
+      // which is better when token is invalid? throw an error, or just return when needed for this function?
     }
   }
 

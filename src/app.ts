@@ -1,4 +1,5 @@
 import express, { Application } from "express";
+import cookiesParser from "cookie-parser";
 import morgran from "morgan";
 
 import dotenv from "dotenv";
@@ -24,6 +25,7 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use("/static", express.static(`${config.static}`));
+    this.app.use(cookiesParser());
     this.app.use(morgran("dev"));
   }
   private setupRoutesMiddlewares() {

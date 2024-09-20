@@ -12,4 +12,5 @@ export default {
   db_name: process.env.DB_NAME,
 
   secret_key: process.env.SECRET_KEY,
+  refresh_key: process.env.REFRESH_TOKEN_KEY,
 };

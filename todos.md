@@ -11,6 +11,7 @@
 | POST   | /auth/resend-verification-email | Resend a verification email   | ❌     |
 | POST   | /auth/change-password           | Change a user's password      | ✅     |
 | POST   | /auth/change-email              | Change a user's email address | ❌     |
+| POST   | /auth/refresh                   | Refresh a user's token        | ✅     |
 
 ## Users Functionalities
 
@@ -26,4 +27,5 @@
 #### TODOS
 
 - Create a function for Mongoid is valid [✅]
+- Review Auth Cycle (Specifically the refresh token) [❌]
 - Query Features (Fields, Filter, Sort, Pagination, Limiting, Search) [❌]

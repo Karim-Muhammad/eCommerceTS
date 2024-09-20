@@ -3,6 +3,7 @@ import { Request, RequestHandler, Response, NextFunction } from "express";
 import ErrorAPI from "../../../common/ErrorAPI";
 import AuthServices from "../service/jwt.services";
 import UserRepository from "../../user/repository";
+import JWTServices from "../service/jwt.services";
 
 class GuardMiddlewares {
   /**
@@ -80,6 +81,17 @@ class GuardMiddlewares {
 
         next();
       });
+    };
+  }
+
+  isLoggedIn() {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      const user = await new UserRepository().readOne({ _id: req.user.id });
+
+      if (!JWTServices.isExpired(user.refreshToken))
+        return next(ErrorAPI.badRequest("Already logged in"));
+
+      next();
     };
   }
 }

@@ -48,6 +48,10 @@ const UserSchema = new Schema<IUserType, IUserModel, IUserMethods>({
     default: true,
   },
 
+  refreshToken: {
+    type: String,
+  },
+
   wishlist: [
     {
       type: Schema.Types.ObjectId,

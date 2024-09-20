@@ -3,7 +3,7 @@ import UserController from "../controller/user.controller";
 import guardMiddleware from "../../auth/middleware/guard.middleware";
 import MongoIdValidations from "../../common/validations/route-validations/mongoId-validations";
 import UserModel from "../model";
-import UserValidations from "../validation";
+import UserValidations from "../validations";
 
 const router = Router();
 
