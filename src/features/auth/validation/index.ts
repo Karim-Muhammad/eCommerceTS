@@ -5,6 +5,8 @@ import UserModel from "../../user/model";
 import { PASSWORD_REGEX } from "../../../common/constants";
 
 class AuthValidations extends Validations {
+  static instance: AuthValidations = null;
+
   constructor() {
     super();
   }
@@ -78,7 +80,11 @@ class AuthValidations extends Validations {
   }
 
   public static getInstance() {
-    return new AuthValidations();
+    if (!this.instance) {
+      this.instance = new AuthValidations();
+    }
+
+    return this.instance;
   }
 }
 

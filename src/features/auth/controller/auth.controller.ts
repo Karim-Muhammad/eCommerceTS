@@ -3,7 +3,6 @@ import ErrorAPI from "../../../common/ErrorAPI";
 import { apiResponse } from "../../../common/helpers";
 import UserRepository from "../../user/repository";
 import JwtServices from "./../service/jwt.services";
-import config from "../../../../config";
 import { REFRESH_TOKEN } from "../../../common/constants";
 
 class UserController {
@@ -36,15 +35,8 @@ class UserController {
         return next(ErrorAPI.unauthorized("Invalid Credentails!"));
       }
 
-      const token = JwtServices.sign({ id: user.id, role: user.role });
-      const refreshToken = JwtServices.sign(
-        { id: user.id, role: user.role },
-        config.refresh_key,
-        "3d"
-      );
-
-      user.refreshToken = refreshToken;
-      await user.save();
+      const token = user.generateAccessToken();
+      const refreshToken = await user.generateRefreshToken();
 
       res.cookie(REFRESH_TOKEN.name, refreshToken, REFRESH_TOKEN.options);
 
@@ -93,41 +85,10 @@ class UserController {
           ErrorAPI.unauthorized("Unauthorized behaviour! (id not match)")
         );
 
-      const newAccessToken = JwtServices.sign({ id: user.id, role: user.role });
+      const newAccessToken = user.generateAccessToken();
 
       return apiResponse(res, 200, "New Access Token returned", {
         token: newAccessToken,
-      });
-    } catch (error) {
-      next(ErrorAPI.internal(error.message));
-    }
-  };
-
-  changePassword = async (req: Request, res: Response, next) => {
-    const currentUser = req.user;
-
-    try {
-      const user = await new UserRepository()
-        .readOne({
-          _id: currentUser.id,
-        })
-        .select("password");
-
-      if (!(await user.comparePassword(req.body["old-password"]))) {
-        return next(
-          ErrorAPI.badRequest("Old password you have entered is incorrect")
-        );
-      }
-
-      // 1# first
-      user.password = req.body["new-password"];
-      await user.save();
-
-      // then, 2# second
-      const token = JwtServices.sign({ id: req.user.id, role: req.user.role });
-
-      return apiResponse(res, 200, "You changed the password successfully", {
-        token,
       });
     } catch (error) {
       next(ErrorAPI.internal(error.message));
@@ -166,9 +127,48 @@ class UserController {
       res.clearCookie("refresh_token", {
         httpOnly: true,
         secure: true,
+        maxAge: 0,
       });
 
       return apiResponse(res, 204, "Logout successfully!");
+    } catch (error) {
+      next(ErrorAPI.internal(error.message));
+    }
+  };
+
+  changePassword = async (req: Request, res: Response, next) => {
+    const currentUser = req.user;
+
+    try {
+      const user = await new UserRepository()
+        .readOne({
+          _id: currentUser.id,
+        })
+        .select("password");
+
+      if (!(await user.comparePassword(req.body["old-password"]))) {
+        return next(
+          ErrorAPI.badRequest("Old password you have entered is incorrect")
+        );
+      }
+
+      // 1# first
+      user.password = req.body["new-password"];
+      await user.save();
+
+      // then, 2# second
+      const token = user.generateAccessToken();
+      const refreshToken = user.generateRefreshToken();
+
+      res.clearCookie(REFRESH_TOKEN.name, {
+        ...REFRESH_TOKEN.options,
+        maxAge: 0,
+      });
+      res.cookie(REFRESH_TOKEN.name, refreshToken, REFRESH_TOKEN.options);
+
+      return apiResponse(res, 200, "You changed the password successfully", {
+        token,
+      });
     } catch (error) {
       next(ErrorAPI.internal(error.message));
     }

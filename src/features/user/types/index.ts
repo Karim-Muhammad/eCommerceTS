@@ -19,7 +19,7 @@ export interface IUserMethods {
   compareRefreshToken: (refreshToken: string) => Promise<boolean>;
   isTokenUpToDate: (tokenDate: number) => boolean;
   generateAccessToken: () => string;
-  generateRefreshToken: () => string;
+  generateRefreshToken: () => Promise<string>;
 }
 
 export interface IUserDocument extends IUser, Document, IUserMethods {

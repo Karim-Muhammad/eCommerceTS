@@ -6,6 +6,8 @@ import { apiResponse } from "../../../common/helpers";
 
 const router = Router();
 
+// ===================== Public Route =====================
+
 router.post(
   "/register",
   guardMiddleware.reverseGuard(),
@@ -15,6 +17,7 @@ router.post(
 
 router.post("/login", guardMiddleware.reverseGuard(), AuthController.login);
 
+// ===================== Protected Route =====================
 router.post("/refresh", guardMiddleware.guard(), AuthController.refreshToken);
 
 router.post("/logout", guardMiddleware.guard(), AuthController.logout);

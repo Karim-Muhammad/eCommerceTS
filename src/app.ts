@@ -12,33 +12,40 @@ import connectDatabase from "../database";
 import apps from "./features";
 
 class App {
-  private app: Application;
+  private static app: Application;
+  private static instance: App;
 
-  constructor() {
-    this.app = express();
+  private constructor() {
+    App.app = express();
   }
 
   private setupDatabase() {
     connectDatabase();
   }
+
   private setupStandardMiddlewares() {
-    this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true }));
-    this.app.use("/static", express.static(`${config.static}`));
-    this.app.use(cookiesParser());
-    this.app.use(morgran("dev"));
+    App.app.use(express.json());
+    App.app.use(express.urlencoded({ extended: true }));
+    App.app.use("/static", express.static(`${config.static}`));
+    App.app.use(cookiesParser());
+    App.app.use(morgran("dev"));
   }
   private setupRoutesMiddlewares() {
-    this.app.use("/", apps);
+    App.app.use("/", apps);
   }
 
-  public start() {
-    this.setupDatabase();
-    this.setupStandardMiddlewares();
-    this.setupRoutesMiddlewares();
+  public static start() {
+    App.self().setupDatabase();
+    App.self().setupStandardMiddlewares();
+    App.self().setupRoutesMiddlewares();
 
-    return this.app;
+    return App.app;
+  }
+
+  private static self() {
+    if (!App.instance) App.instance = new App();
+    return App.instance;
   }
 }
 
-export default new App();
+export default App;

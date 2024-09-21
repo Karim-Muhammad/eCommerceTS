@@ -22,7 +22,7 @@ UserSchema.methods.compareRefreshToken = async function (refreshToken: string) {
   }
 };
 
-UserSchema.methods.generateRefreshToken = function () {
+UserSchema.methods.generateRefreshToken = async function () {
   const refreshToken = JWTServices.sign(
     { id: this.id, role: this.role },
     config.refresh_key,
@@ -35,7 +35,7 @@ UserSchema.methods.generateRefreshToken = function () {
     .digest("hex");
 
   this.refreshToken = rTknHash;
-  this.save();
+  await this.save();
 
   return refreshToken;
 };

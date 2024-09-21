@@ -1,5 +1,11 @@
 # Fully Functional REST API for Ecommerce Website
 
+> Class - Structure = Functions
+
+Yes! Although my project using classes without any planning or structure, i mentions that.
+
+my goal is to enhance my skills in OOP and design code, so I will try to refactor my project in next phase.
+
 This is a fully functional REST API for an Ecommerce website. It is built using Node/Express. It has all the necessary features required for an Ecommerce website. It has the following features:
 
 1. User Authentication
