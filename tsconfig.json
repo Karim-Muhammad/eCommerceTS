@@ -9,5 +9,5 @@
     "typeRoots": ["./node_modules/@types", "./src/@types", "@types"]
   },
   "lib": ["es2015"],
-  "include": ["src/**/*.ts", "src/@types/express/index.d.ts"]
+  "include": ["src/**/*.ts", "src/@types/**/index.d.ts"]
 }
