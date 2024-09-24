@@ -15,19 +15,45 @@ class APIRouter {
       [method in keyof ResourceApiController]?: RequestHandler[];
     } = {}
   ) {
-    this.router.use(middlewares["all"]);
+    const applyMiddlewares = (handlers: RequestHandler[], type) => {
+      console.log("Handlers", handlers);
+      if (!handlers || handlers.length === 0) {
+        return [
+          (req, res, next) => {
+            console.log("Next to ", req.method, type);
+            return next();
+          },
+        ];
+      }
+
+      return handlers;
+    };
+
+    this.router.use(...applyMiddlewares(middlewares["all"], "all"));
 
     this.router
       .route(path)
-      .get(middlewares["read"], controller.read)
-      .post(middlewares["create"], controller.create);
+      .get(applyMiddlewares(middlewares["read"], "read"), controller.read)
+      .post(
+        applyMiddlewares(middlewares["create"], "create"),
+        controller.create
+      );
 
     this.router
-      .route(`${path}/:id`)
-      .all(middlewares["all"])
-      .get(middlewares["readOne"], controller.readOne)
-      .put(middlewares["update"], controller.update)
-      .delete(middlewares["delete"], controller.delete);
+      .route(`${path}:id`)
+      .all(applyMiddlewares(middlewares["singleResource"], "singleResource"))
+      .get(
+        applyMiddlewares(middlewares["readOne"], "readOne"),
+        controller.readOne
+      )
+      .patch(
+        applyMiddlewares(middlewares["update"], "update"),
+        controller.update
+      )
+      .delete(
+        applyMiddlewares(middlewares["delete"], "delete"),
+        controller.delete
+      );
   }
 
   getRouter() {

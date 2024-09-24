@@ -1,9 +1,13 @@
-import { Router } from "express";
+import APIRouter from "../../../common/Router";
+import guardMiddleware from "../../auth/middleware/guard.middleware";
+import BrandsController from "../controller";
 
-const router = Router();
+const router = new APIRouter();
 
-router.route("/").get().post();
+router.resource("/", BrandsController, {
+  create: [guardMiddleware.adminGuard()],
+  update: [guardMiddleware.adminGuard()],
+  delete: [guardMiddleware.adminGuard()],
+});
 
-router.route("/:id").all().get().put().delete();
-
-export default router;
+export default router.getRouter();

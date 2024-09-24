@@ -1,7 +1,6 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import ProductRepository from "../repository";
-import ErrorAPI from "../../../common/ErrorAPI";
-import { apiResponse } from "../../../common/helpers";
+import { apiResponse, catchAsync } from "../../../common/helpers";
 
 class ProductController {
   private productRepository: ProductRepository;
@@ -11,46 +10,45 @@ class ProductController {
     this.productRepository = new ProductRepository();
   }
 
-  create = async (req: Request, res: Response, next: NextFunction) => {
+  create = catchAsync(async (req: Request, res: Response) => {
     const { body: data } = req;
-    return apiResponse(res, 200, "New product created successfully!", req.body);
 
-    try {
-      const newProduct = await this.productRepository.create(data);
-      console.log(newProduct);
+    const newProduct = await this.productRepository.create(data);
+    console.log(newProduct);
 
-      return apiResponse(res, 201, "New product created successfully!", {
-        product: newProduct,
-      });
-    } catch (error) {
-      next(ErrorAPI.internal(error.message));
-    }
-  };
+    return apiResponse(res, 201, "New product created successfully!", {
+      product: newProduct,
+    });
+  });
 
-  read = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const products = await this.productRepository.read({});
-      return apiResponse(res, 200, "All Products fetched", { products });
-    } catch (error) {
-      next(ErrorAPI.internal(error.message));
-    }
-  };
+  read = catchAsync(async (req: Request, res: Response) => {
+    const products = await this.productRepository.read({});
+    return apiResponse(res, 200, "All Products fetched", { products });
+  });
 
-  update = async (req: Request, res: Response, next: NextFunction) => {
+  readOne = catchAsync(async (req: Request, res: Response) => {
+    const product = await this.productRepository.readOne({
+      _id: req.params.id,
+    });
+    return apiResponse(res, 200, "Product fetched", { product });
+  });
+
+  update = catchAsync(async (req: Request, res: Response) => {
     const { body: data, params } = req;
-    try {
-      const updatedProduct = await this.productRepository.update(
-        { _id: params.id },
-        data
-      );
+    const updatedProduct = await this.productRepository.update(
+      { _id: params.id },
+      data
+    );
 
-      return apiResponse(res, 200, "Product updated successfully!", {
-        product: updatedProduct,
-      });
-    } catch (error) {
-      next(ErrorAPI.internal(error.message));
-    }
-  };
+    return apiResponse(res, 200, "Product updated successfully!", {
+      product: updatedProduct,
+    });
+  });
+
+  delete = catchAsync(async (req: Request, res: Response) => {
+    const product = await this.productRepository.delete({ _id: req.params.id });
+    return apiResponse(res, 204, "Product deleted successfully!", { product });
+  });
 
   static getInstance = () => {
     if (!ProductController.instance)

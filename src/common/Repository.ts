@@ -12,7 +12,7 @@ class Repository<T extends Document> {
     return this.Model.create(data);
   }
 
-  update(selector: FilterQuery<T>, data: Partial<T>) {
+  update(selector: FilterQuery<T>, data: Partial<T>, options = {}) {
     return this.Model.findOneAndUpdate(
       selector,
       {
@@ -20,6 +20,8 @@ class Repository<T extends Document> {
       },
       {
         new: true,
+        runValidators: true,
+        ...options,
       }
     );
   }

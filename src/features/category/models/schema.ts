@@ -24,8 +24,7 @@ const CategorySchema = new Schema<ICategory, ICategoryModel, ICategoryMethods>({
 
   image: {
     type: String,
-    required: true,
-    trim: true,
+    // required: true,
   },
 
   count: {

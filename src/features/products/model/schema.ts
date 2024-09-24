@@ -61,19 +61,19 @@ const ProductSchema = new Schema<IProduct, IProductModel, IProductMethods>({
     default: 0,
   },
 
-  ratings: [
-    {
-      stars: {
-        type: Number,
-        required: true,
-      },
-      user: {
-        type: Schema.Types.ObjectId,
-        ref: "USer",
-      },
-      review: String,
-    },
-  ],
+  // ratings: [
+  //   {
+  //     stars: {
+  //       type: Number,
+  //       required: true,
+  //     },
+  //     user: {
+  //       type: Schema.Types.ObjectId,
+  //       ref: "USer",
+  //     },
+  //     review: String,
+  //   },
+  // ],
 
   averageRatings: {
     type: Number,

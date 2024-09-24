@@ -1,9 +1,13 @@
-import { Router } from "express";
-const router = Router();
+import APIRouter from "../../../common/Router";
+import guardMiddleware from "../../auth/middleware/guard.middleware";
+import CategoryController from "../controller";
 
-router.get("/");
-router.post("/");
+const router = new APIRouter();
 
-router.route("/:id").all().get().put().delete();
+router.resource("/", CategoryController, {
+  create: [guardMiddleware.adminGuard()],
+  update: [guardMiddleware.adminGuard()],
+  delete: [guardMiddleware.adminGuard()],
+});
 
-export default router;
+export default router.getRouter();

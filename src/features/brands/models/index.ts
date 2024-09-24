@@ -2,6 +2,7 @@ import { model } from "mongoose";
 
 import BrandSchema from "./schema";
 import "./methods";
+import "./hooks";
 
 import { IBrandDocument } from "../types";
 

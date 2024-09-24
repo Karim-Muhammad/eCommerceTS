@@ -1,3 +1,5 @@
+Link API: https://documenter.getpostman.com/view/23054100/2sAXqv61r7
+
 ## Authentication Functionalities
 
 | Method | Endpoint                        | Description                   | Status |
@@ -24,8 +26,40 @@
 | POST   | /users/:id/block   | Block a user   | ✅     |
 | POST   | /users/:id/unblock | Unblock a user | ✅     |
 
-#### TODOS
+#### TODOS (General)
 
 - Create a function for Mongoid is valid [✅]
 - Review Auth Cycle (Specifically the refresh token) [❌]
 - Query Features (Fields, Filter, Sort, Pagination, Limiting, Search) [❌]
+
+## Brands Functionalities
+
+| Method | Endpoint    | Description    | Status |
+| ------ | ----------- | -------------- | ------ |
+| GET    | /brands     | Get all brands | ✅     |
+| GET    | /brands/:id | Get a brand    | ✅     |
+| POST   | /brands     | Create a brand | ✅     |
+| PATCH  | /brands/:id | Update a brand | ✅     |
+| DELETE | /brands/:id | Delete a brand | ✅     |
+
+## Categories Functionalities
+
+| Method | Endpoint        | Description        | Status |
+| ------ | --------------- | ------------------ | ------ |
+| GET    | /categories     | Get all categories | ✅     |
+| GET    | /categories/:id | Get a category     | ✅     |
+| POST   | /categories     | Create a category  | ✅     |
+| PATCH  | /categories/:id | Update a category  | ✅     |
+| DELETE | /categories/:id | Delete a category  | ✅     |
+
+## Products Functionalities
+
+| Method | Endpoint      | Description      | Status |
+| ------ | ------------- | ---------------- | ------ |
+| GET    | /products     | Get all products | ❌     |
+| GET    | /products/:id | Get a product    | ❌     |
+| POST   | /products     | Create a product | ❌     |
+| PATCH  | /products/:id | Update a product | ❌     |
+| DELETE | /products/:id | Delete a product | ❌     |
+
+## TODOS

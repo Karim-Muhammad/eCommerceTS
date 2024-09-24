@@ -1,9 +1,18 @@
-import { Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import path from "path";
 import config from "../../config";
+import ErrorAPI from "./ErrorAPI";
 
 export const serveStaticFiles = (folder): string =>
   path.join(`${config.root}/static/${folder}`);
+
+export const catchAsync = (
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<unknown>
+): RequestHandler => {
+  return (req, res, next) => {
+    fn(req, res, next).catch((error) => next(ErrorAPI.internal(error.message)));
+  };
+};
 
 export const apiResponse = (
   res: Response,

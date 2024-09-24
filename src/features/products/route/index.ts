@@ -1,17 +1,14 @@
-import { Router } from "express";
 import ProductController from "../controller";
-import ProductValidations from "../validations";
+import APIRouter from "../../../common/Router";
+import guardMiddleware from "../../auth/middleware/guard.middleware";
+// import ProductValidations from "../validations";
 
-const router = Router();
+const router = new APIRouter();
 
-router.get("/", ProductController.read);
-router.post("/", ProductValidations.create(), ProductController.create);
+router.resource("/", ProductController, {
+  create: [guardMiddleware.guard(), guardMiddleware.only(["admin", "vendor"])],
+  update: [guardMiddleware.guard(), guardMiddleware.only(["admin", "vendor"])],
+  delete: [guardMiddleware.guard(), guardMiddleware.only(["admin", "vendor"])],
+});
 
-router
-  .route("/:id")
-  .all()
-  .get()
-  .patch(ProductValidations.update(), ProductController.update)
-  .delete();
-
-export default router;
+export default router.getRouter();

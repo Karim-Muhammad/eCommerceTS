@@ -76,11 +76,35 @@ class GuardMiddlewares {
       this.guard()(req, res, (error) => {
         if (error) return next(error);
 
-        if (req.user.role !== "admin")
-          return next(ErrorAPI.unauthorized("You are not allowed!"));
+        this.only(["admin"])(req, res, (error) => {
+          if (error) return next(error);
 
-        next();
+          next();
+        });
       });
+    };
+  }
+
+  vendorGuard() {
+    return (req: Request, res: Response, next: NextFunction) => {
+      this.guard()(req, res, (error) => {
+        if (error) return next(error);
+
+        this.only(["admin"])(req, res, (error) => {
+          if (error) return next(error);
+
+          next();
+        });
+      });
+    };
+  }
+
+  only(roles: string[]) {
+    return (req: Request, res: Response, next: NextFunction) => {
+      if (!roles.includes(req.user.role))
+        return next(ErrorAPI.unauthorized("You're not Allowed!"));
+
+      next();
     };
   }
 
