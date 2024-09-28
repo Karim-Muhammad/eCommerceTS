@@ -16,7 +16,7 @@ class APIRouter {
     } = {}
   ) {
     const applyMiddlewares = (handlers: RequestHandler[], type) => {
-      console.log("Handlers", handlers);
+      // console.log("Handlers", handlers);
       if (!handlers || handlers.length === 0) {
         return [
           (req, res, next) => {
@@ -29,7 +29,7 @@ class APIRouter {
       return handlers;
     };
 
-    this.router.use(...applyMiddlewares(middlewares["all"], "all"));
+    this.router.use(applyMiddlewares(middlewares["all"], "all"));
 
     this.router
       .route(path)

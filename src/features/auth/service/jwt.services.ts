@@ -13,16 +13,16 @@ class JWTServices {
   static sign(
     payload: Payload,
     secret: string = config.secret_key,
-    expiresIn = "1d"
+    expiresIn = "1h"
   ) {
     return jwt.sign(payload, secret, {
       expiresIn,
     });
   }
 
-  static verify(token: string): Payload {
+  static verify(token: string, secret: string = config.secret_key): Payload {
     try {
-      const decoded = jwt.verify(token, config.secret_key);
+      const decoded = jwt.verify(token, secret);
       return decoded as Payload;
     } catch (error) {
       if (error instanceof TokenExpiredError) {

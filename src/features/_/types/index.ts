@@ -11,7 +11,7 @@ export interface IMethods {
 
 export interface IDocument extends I, IMethods, Document {}
 
-export interface IBrandModel extends Model<IDocument> {
+export interface IModel extends Model<IDocument> {
   // static methods
   staticMethod: () => void;
 }

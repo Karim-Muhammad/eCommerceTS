@@ -1,9 +1,14 @@
+import fs from "fs";
+
 import { Request, Response } from "express";
 import ErrorAPI from "../../../common/ErrorAPI";
-import { apiResponse } from "../../../common/helpers";
+import { apiResponse, catchAsync } from "../../../common/helpers";
 import UserRepository from "../../user/repository";
 import JwtServices from "./../service/jwt.services";
 import { REFRESH_TOKEN } from "../../../common/constants";
+import UserModel from "../../user/model";
+import config from "../../../../config";
+import sendEmail from "../../../common/email.service";
 
 class UserController {
   private readonly userRepository: UserRepository;
@@ -63,6 +68,8 @@ class UserController {
   refreshToken = async (req: Request, res: Response, next) => {
     try {
       const cookies = req.cookies;
+      console.log("Cookies", cookies);
+
       if (!cookies["refresh_token"])
         return next(
           ErrorAPI.badRequest(
@@ -71,7 +78,10 @@ class UserController {
         );
 
       const refreshToken = cookies["refresh_token"];
-      const user = await this.userRepository.readOne({ refreshToken });
+      const rTknHash = UserModel.getRefreshToken(refreshToken);
+      const user = await this.userRepository.readOne({
+        refreshToken: rTknHash,
+      });
       if (!user)
         return next(
           ErrorAPI.notFound(
@@ -79,7 +89,7 @@ class UserController {
           )
         );
 
-      const decodedToken = JwtServices.verify(refreshToken);
+      const decodedToken = JwtServices.verify(refreshToken, config.refresh_key);
       if (decodedToken.id !== user.id)
         return next(
           ErrorAPI.unauthorized("Unauthorized behaviour! (id not match)")
@@ -173,6 +183,81 @@ class UserController {
       next(ErrorAPI.internal(error.message));
     }
   };
+
+  forgotPassword = catchAsync(async (req: Request, res: Response, next) => {
+    const { email } = req.body;
+    const user = await this.userRepository.readOne({ email });
+
+    if (!user) return next(ErrorAPI.notFound("User not found"));
+
+    const resetToken = user.generatePasswordResetToken();
+    await user.save();
+
+    sendEmail({
+      from: config.mail_account,
+      to: email,
+      subject: "Password Reset",
+      text: "Forgot Password",
+      body: fs
+        .readFileSync(
+          `${config.root}/src/templates/forgot-password.html`,
+          "utf-8"
+        )
+        .replace("{{ email }}", config.mail_account)
+        .replace("{{ token }}", resetToken)
+        .replace(
+          "{{ url }}",
+          `${config.server}/auth/reset-password-verification?token=${resetToken}`
+        ),
+    })
+      .then(() => {
+        return apiResponse(res, 200, "Reset password link sent to your email");
+      })
+      .catch((error) => {
+        next(ErrorAPI.internal(error.message));
+      });
+  });
+
+  resetPasswordVerify = catchAsync(
+    async (req: Request, res: Response, next) => {
+      console.log("Token", req.query.token);
+      const token = req.query.token as string;
+
+      const user = await this.userRepository.readOne({
+        passwordResetToken: UserModel.getPasswordResetToken(token),
+        passwordResetTokenExpires: { $gt: Date.now() },
+      });
+      if (!user) return next(ErrorAPI.notFound("No exists (auth issue)!"));
+
+      user.passwordResetVerified = true;
+
+      await user.save();
+
+      return apiResponse(res, 200, "You can now change your password");
+    }
+  );
+
+  resetPassword = catchAsync(async (req: Request, res: Response, next) => {
+    const { password } = req.body;
+    const token = req.query.token as string;
+
+    const user = await this.userRepository.readOne({
+      passwordResetToken: UserModel.getPasswordResetToken(token),
+      passwordResetTokenExpires: { $gt: Date.now() },
+      passwordResetVerified: true,
+    });
+
+    if (!user) return next(ErrorAPI.unauthorized("Authorization Issue"));
+
+    user.passwordResetToken = undefined;
+    user.passwordResetTokenExpires = undefined;
+    user.passwordResetVerified = false;
+
+    user.password = password;
+    await user.save();
+
+    return apiResponse(res, 200, "New passwored is set");
+  });
 }
 
 export default new UserController();

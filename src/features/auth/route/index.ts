@@ -3,6 +3,7 @@ import AuthController from "../controller/auth.controller";
 import AuthValidations from "../validation";
 import guardMiddleware from "../middleware/guard.middleware";
 import { apiResponse } from "../../../common/helpers";
+import authController from "../controller/auth.controller";
 
 const router = Router();
 
@@ -18,9 +19,27 @@ router.post(
 router.post("/login", guardMiddleware.reverseGuard(), AuthController.login);
 
 // ===================== Protected Route =====================
-router.post("/refresh", guardMiddleware.guard(), AuthController.refreshToken);
+router.post("/refresh", AuthController.refreshToken);
 
 router.post("/logout", guardMiddleware.guard(), AuthController.logout);
+
+router.post(
+  "/forgot-password",
+  guardMiddleware.reverseGuard(),
+  authController.forgotPassword
+);
+
+router.get(
+  "/reset-password-verification",
+  guardMiddleware.reverseGuard(),
+  authController.resetPasswordVerify
+);
+
+router.post(
+  "/reset-password",
+  guardMiddleware.reverseGuard(),
+  authController.resetPassword
+);
 
 router.patch(
   "/change-password",

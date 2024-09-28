@@ -7,6 +7,10 @@ ProductSchema.pre("validate", function (next) {
     this.slug = slugify(this.name, { lower: true });
   }
 
+  // if (this.isModified("images")) {
+  //   Storage.removeImagesFromStorage(this.images);
+  // }
+
   next();
 });
 

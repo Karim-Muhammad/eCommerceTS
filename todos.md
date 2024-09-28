@@ -7,8 +7,8 @@ Link API: https://documenter.getpostman.com/view/23054100/2sAXqv61r7
 | POST   | /auth/register                  | Register a new user           | ✅     |
 | POST   | /auth/login                     | Login a user                  | ✅     |
 | POST   | /auth/logout                    | Logout a user                 | ✅     |
-| POST   | /auth/forgot-password           | Send a password reset email   | ❌     |
-| POST   | /auth/reset-password            | Reset a user's password       | ❌     |
+| POST   | /auth/forgot-password           | Send a password reset email   | ✅     |
+| POST   | /auth/reset-password            | Reset a user's password       | ✅     |
 | POST   | /auth/verify-email              | Verify a user's email address | ❌     |
 | POST   | /auth/resend-verification-email | Resend a verification email   | ❌     |
 | POST   | /auth/change-password           | Change a user's password      | ✅     |
@@ -30,7 +30,7 @@ Link API: https://documenter.getpostman.com/view/23054100/2sAXqv61r7
 
 - Create a function for Mongoid is valid [✅]
 - Review Auth Cycle (Specifically the refresh token) [❌]
-- Query Features (Fields, Filter, Sort, Pagination, Limiting, Search) [❌]
+- Query Features (Fields, Filter, Sort, Pagination, Limiting, Search) [✅]
 
 ## Brands Functionalities
 
@@ -56,10 +56,10 @@ Link API: https://documenter.getpostman.com/view/23054100/2sAXqv61r7
 
 | Method | Endpoint      | Description      | Status |
 | ------ | ------------- | ---------------- | ------ |
-| GET    | /products     | Get all products | ❌     |
-| GET    | /products/:id | Get a product    | ❌     |
-| POST   | /products     | Create a product | ❌     |
-| PATCH  | /products/:id | Update a product | ❌     |
+| GET    | /products     | Get all products | ✅     |
+| GET    | /products/:id | Get a product    | ✅     |
+| POST   | /products     | Create a product | ✅     |
+| PATCH  | /products/:id | Update a product | ✅     |
 | DELETE | /products/:id | Delete a product | ❌     |
 
 ## TODOS

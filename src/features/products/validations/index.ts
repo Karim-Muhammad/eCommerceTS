@@ -1,5 +1,10 @@
-import { body } from "express-validator";
+import { body, validationResult } from "express-validator";
 import Validations from "../../../common/Validations";
+import CategoryModel from "../../category/models";
+import ErrorAPI from "../../../common/ErrorAPI";
+import BrandModel from "../../brands/models";
+import Storage from "../../../common/Storage";
+import ProductModel from "../model";
 
 class ProductValidations extends Validations {
   private mutate(isUpdate = false) {
@@ -11,7 +16,14 @@ class ProductValidations extends Validations {
         .bail()
         .isLength({ min: 3, max: 50 })
         .withMessage("'name' length (min: 3, max: 50)")
-        .bail(),
+        .bail()
+        .custom(async (value) => {
+          const isExist = await ProductModel.findOne({ name: value });
+          if (isExist)
+            throw ErrorAPI.badRequest("Product name is already be taken!");
+
+          return true;
+        }),
 
       body("description")
         .if(() => !isUpdate)
@@ -52,35 +64,65 @@ class ProductValidations extends Validations {
       body("category")
         .if(() => !isUpdate)
         .notEmpty()
-        .withMessage("'category' is required"),
+        .withMessage("'category' is required")
+        .custom(async (value) => {
+          const category = await CategoryModel.findById(value);
+          if (!category)
+            throw ErrorAPI.badRequest("This CategoryID is not exist!");
+
+          return true;
+        }),
 
       body("brand")
         .if(() => !isUpdate)
         .notEmpty()
-        .withMessage("'brand' is required"),
+        .withMessage("'brand' is required")
+        .custom(async (value) => {
+          const brand = await BrandModel.findById(value);
+          if (!brand) throw ErrorAPI.badRequest("this BrandID is not exist!");
+
+          return true;
+        }),
 
       body("images")
         .if(() => !isUpdate)
         .isArray()
-        .withMessage("'images' must be an array")
-        .custom((value, { req }) => {}),
+        .withMessage("'images' must be an array"),
 
       body("colors")
         .if(() => !isUpdate)
         .optional()
         .isArray()
         .withMessage("'colors' must be an array")
-        .custom((value, { req }) => {}),
+        .custom((value) => {
+          console.log(value);
+
+          if (!value["name"] || !value["hexCode"] || !value["quantity"])
+            throw ErrorAPI.badRequest(
+              "Please Enter Valid Color value (name, hexCode, quantity)!"
+            );
+
+          return true;
+        }),
 
       body("tags")
         .if(() => !isUpdate)
         .isArray()
         .withMessage("'tags' must be an array"),
 
-      body("ratings")
-        .if(() => !isUpdate)
-        .isArray()
-        .withMessage("'ratings' must be an array"),
+      // body("ratings")
+      //   .if(() => !isUpdate)
+      //   .isArray()
+      //   .withMessage("'ratings' must be an array"),
+
+      body("images").custom((images: string[], { req }) => {
+        if (!validationResult(req).isEmpty()) {
+          console.log("----images----", images);
+          Storage.removeImagesFromStorage(images);
+        }
+
+        return true;
+      }),
 
       this.validate(),
     ];

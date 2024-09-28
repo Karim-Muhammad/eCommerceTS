@@ -8,20 +8,6 @@ UserSchema.methods.comparePassword = async function (password: string) {
   return await bcrypt.compare(password, this.password);
 };
 
-UserSchema.methods.compareRefreshToken = async function (refreshToken: string) {
-  try {
-    const rTknHash = crypto
-      .createHmac("sha256", config.refresh_key)
-      .update(refreshToken)
-      .digest("hex");
-
-    return this.refreshToken === rTknHash;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-};
-
 UserSchema.methods.generateRefreshToken = async function () {
   const refreshToken = JWTServices.sign(
     { id: this.id, role: this.role },
@@ -54,6 +40,35 @@ UserSchema.methods.isTokenUpToDate = function (tokenDate: number) {
   return this.passwordChangedAt / 1000 < tokenDate;
 };
 
+UserSchema.methods.generatePasswordResetToken = function () {
+  const token = crypto.randomBytes(32).toString("hex");
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+
+  this.passwordResetTokenExpires = Date.now() + 1000 * 60 * 30; // 30 minutes
+  return token;
+};
+
+UserSchema.methods.comparePasswordResetTokenExpiration = function (
+  time: number
+) {
+  return this.passwordResetTokenExpires === time;
+};
+
 UserSchema.statics.findByEmail = async function (email) {
   return await this.findOne({ email });
+};
+
+UserSchema.statics.getRefreshToken = function (refreshToken: string) {
+  return crypto
+    .createHmac("sha256", config.refresh_key)
+    .update(refreshToken)
+    .digest("hex");
+};
+
+UserSchema.statics.getPasswordResetToken = function (token: string) {
+  const resetToken = crypto.createHash("sha256").update(token).digest("hex");
+  return resetToken;
 };

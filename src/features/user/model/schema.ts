@@ -33,6 +33,10 @@ const UserSchema = new Schema<IUserType, IUserModel, IUserMethods>({
     default: Date.now(),
   },
 
+  passwordResetToken: String,
+  passwordResetTokenExpires: Number,
+  passwordResetVerified: Boolean,
+
   mobile: {
     type: String,
     unique: true,

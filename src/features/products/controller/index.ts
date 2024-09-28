@@ -22,8 +22,14 @@ class ProductController {
   });
 
   read = catchAsync(async (req: Request, res: Response) => {
-    const products = await this.productRepository.read({});
-    return apiResponse(res, 200, "All Products fetched", { products });
+    const { data: products, query } =
+      await this.productRepository.readWithQueryFeatures({}, req);
+
+    console.log("Products", products);
+    return apiResponse(res, 200, "All Products fetched", {
+      products,
+      pagination: query.pagination,
+    });
   });
 
   readOne = catchAsync(async (req: Request, res: Response) => {
@@ -34,6 +40,8 @@ class ProductController {
   });
 
   update = catchAsync(async (req: Request, res: Response) => {
+    console.log("UPDATE Product");
+
     const { body: data, params } = req;
     const updatedProduct = await this.productRepository.update(
       { _id: params.id },

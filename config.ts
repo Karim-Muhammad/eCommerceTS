@@ -5,6 +5,7 @@ export default {
 
   serverDomain: process.env.SERVER_DOMAIN,
   serverPort: process.env.SERVER_PORT,
+  server: `${process.env.SERVER_DOMAIN}:${process.env.SERVER_PORT}`,
   root: root,
   static: "./static/public",
 
@@ -13,4 +14,7 @@ export default {
 
   secret_key: process.env.SECRET_KEY,
   refresh_key: process.env.REFRESH_TOKEN_KEY,
+
+  mail_account: process.env.MAIL_ACCOUNT,
+  mail_password: process.env.MAIL_PASSWORD_APP,
 };
