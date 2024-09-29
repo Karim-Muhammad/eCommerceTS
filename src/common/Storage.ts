@@ -141,7 +141,11 @@ class Storage {
         // console.log("Files", req.files);
         // console.log("File", req.files[field.name]);
 
-        if (fileCount) req.body[field.name] = file.map((f) => f.filename);
+        if (fileCount)
+          req.body[field.name] =
+            field.maxCount !== 1
+              ? file.map((f) => f.filename)
+              : file[0].filename;
       });
 
       next();

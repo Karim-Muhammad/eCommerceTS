@@ -15,6 +15,8 @@ Link API: https://documenter.getpostman.com/view/23054100/2sAXqv61r7
 | POST   | /auth/change-email              | Change a user's email address | ❌     |
 | POST   | /auth/refresh                   | Refresh a user's token        | ✅     |
 
+#### TODOS
+
 ## Users Functionalities
 
 | Method | Endpoint           | Description    | Status |
@@ -42,6 +44,8 @@ Link API: https://documenter.getpostman.com/view/23054100/2sAXqv61r7
 | PATCH  | /brands/:id | Update a brand | ✅     |
 | DELETE | /brands/:id | Delete a brand | ✅     |
 
+#### TODOS
+
 ## Categories Functionalities
 
 | Method | Endpoint        | Description        | Status |
@@ -51,6 +55,8 @@ Link API: https://documenter.getpostman.com/view/23054100/2sAXqv61r7
 | POST   | /categories     | Create a category  | ✅     |
 | PATCH  | /categories/:id | Update a category  | ✅     |
 | DELETE | /categories/:id | Delete a category  | ✅     |
+
+#### TODOS
 
 ## Products Functionalities
 
@@ -62,4 +68,19 @@ Link API: https://documenter.getpostman.com/view/23054100/2sAXqv61r7
 | PATCH  | /products/:id | Update a product | ✅     |
 | DELETE | /products/:id | Delete a product | ❌     |
 
-## TODOS
+#### TODOS
+
+## Blogs Functionalities
+
+| Method | Endpoint   | Description   | Status |
+| ------ | ---------- | ------------- | ------ |
+| GET    | /blogs     | Get all blogs | ✅     |
+| GET    | /blogs/:id | Get a blog    | ✅     |
+| POST   | /blogs     | Create a blog | ✅     |
+| PATCH  | /blogs/:id | Update a blog | ✅     |
+| DELETE | /blogs/:id | Delete a blog | ✅     |
+
+#### TODOS
+
+- Add Validations Layer before Controller [❌]
+- Add Check for User if owner who update or delete [❌]
