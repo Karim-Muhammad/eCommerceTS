@@ -1,4 +1,4 @@
-import { Document } from "mongoose";
+import { Document, QueryOptions, type UpdateQuery } from "mongoose";
 import { FilterQuery, Model } from "mongoose";
 import QueryFeatures from "./QueryFeatures";
 
@@ -13,10 +13,41 @@ class Repository<T extends Document> {
     return this.Model.create(data);
   }
 
-  update(selector: FilterQuery<T>, data: Partial<T>, options = {}) {
+  update(
+    selector: FilterQuery<T>,
+    data: Partial<T>,
+    options: QueryOptions<T> = {},
+    update: UpdateQuery<T> = {}
+  ) {
     return this.Model.findOneAndUpdate(
       selector,
       {
+        ...update,
+        $set: data,
+      },
+      {
+        new: true,
+        runValidators: true,
+        ...options,
+      }
+    );
+  }
+
+  change({
+    selector,
+    data,
+    options,
+    update = {},
+  }: {
+    selector: FilterQuery<T>;
+    data?: Partial<T>;
+    options?: QueryOptions<T>;
+    update?: UpdateQuery<T>;
+  }) {
+    return this.Model.findOneAndUpdate(
+      selector,
+      {
+        ...update,
         $set: data,
       },
       {

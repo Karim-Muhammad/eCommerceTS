@@ -72,13 +72,15 @@ Link API: https://documenter.getpostman.com/view/23054100/2sAXqv61r7
 
 ## Blogs Functionalities
 
-| Method | Endpoint   | Description   | Status |
-| ------ | ---------- | ------------- | ------ |
-| GET    | /blogs     | Get all blogs | ✅     |
-| GET    | /blogs/:id | Get a blog    | ✅     |
-| POST   | /blogs     | Create a blog | ✅     |
-| PATCH  | /blogs/:id | Update a blog | ✅     |
-| DELETE | /blogs/:id | Delete a blog | ✅     |
+| Method | Endpoint          | Description   | Status |
+| ------ | ----------------- | ------------- | ------ |
+| GET    | /blogs            | Get all blogs | ✅     |
+| GET    | /blogs/:id        | Get a blog    | ✅     |
+| POST   | /blogs            | Create a blog | ✅     |
+| PATCH  | /blogs/:id        | Update a blog | ✅     |
+| DELETE | /blogs/:id        | Delete a blog | ✅     |
+| PATCH  | /blogs/:id/like   | Like a blog   | ✅     |
+| PATCH  | /blogs/:id/unlike | Unlike a blog | ✅     |
 
 #### TODOS
 

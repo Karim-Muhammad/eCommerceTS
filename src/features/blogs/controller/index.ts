@@ -9,15 +9,14 @@ class BlogController {
     this.blogRepository = new BlogRepository();
   }
 
-  create = catchAsync(
-    async (req: Request, res: Response, _next: NextFunction) => {
-      const newBlog = await this.blogRepository.create({
-        ...req.body,
-        author: req.user.id,
-      });
-      return apiResponse(res, 201, "New blog is created!", { blog: newBlog });
-    }
-  );
+  create = catchAsync(async (req: Request, res: Response) => {
+    const newBlog = await this.blogRepository.create({
+      ...req.body,
+      author: req.user.id,
+    });
+    return apiResponse(res, 201, "New blog is created!", { blog: newBlog });
+  });
+
   read = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { data: blogs, pagination } =
       await this.blogRepository.readWithQueryFeatures({}, req.query);
@@ -67,12 +66,38 @@ class BlogController {
     }
   );
 
-  like = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {}
-  );
+  like = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const user = req.user;
+
+    const blog = await this.blogRepository.readOne({ _id: id });
+    if (blog.likes.includes(user.id))
+      return next(ErrorAPI.badRequest("You already liked this blog!"));
+
+    await blog.updateOne({
+      $push: { likes: user.id },
+      $pull: { dislikes: user.id },
+    });
+
+    return apiResponse(res, 200, "You liked this blog", { liked: true });
+  });
 
   dislike = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {}
+    async (req: Request, res: Response, next: NextFunction) => {
+      const { id } = req.params;
+      const user = req.user;
+
+      const blog = await this.blogRepository.readOne({ _id: id });
+      if (blog.dislikes.includes(user.id))
+        return next(ErrorAPI.badRequest("You already dislikes this blog!"));
+
+      await blog.updateOne({
+        $push: { dislikes: user.id },
+        $pull: { likes: user.id },
+      });
+
+      return apiResponse(res, 200, "You disliked this blog", { liked: false });
+    }
   );
 }
 

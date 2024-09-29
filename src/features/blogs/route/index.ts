@@ -22,4 +22,9 @@ router.resource("/", BlogController, {
   delete: [guardMiddleware.adminGuard()],
 });
 
+router
+  .getRouter()
+  .patch("/:id/like", guardMiddleware.guard(), BlogController.like)
+  .patch("/:id/unlike", guardMiddleware.guard(), BlogController.dislike);
+
 export default router.getRouter();
