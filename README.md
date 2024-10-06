@@ -70,6 +70,9 @@ Link API: https://documenter.getpostman.com/view/23054100/2sAXqv61r7
 
 #### TODOS
 
+- Add Ratings and Reviews [✅]
+- Validation Layer [❌]
+
 ## Blogs Functionalities
 
 | Method | Endpoint          | Description   | Status |
@@ -86,3 +89,31 @@ Link API: https://documenter.getpostman.com/view/23054100/2sAXqv61r7
 
 - Add Validations Layer before Controller [❌]
 - Add Check for User if owner who update or delete [❌]
+
+## Wishlist Functionalities
+
+| Method | Endpoint         | Description                    | Status |
+| ------ | ---------------- | ------------------------------ | ------ |
+| GET    | /wishlists       | Get all wishlists              | ✅     |
+| GET    | /wishlists/:id   | Get a wishlist                 | ✅     |
+| POST   | /wishlist/add    | add product in wishlist        | ✅     |
+| POST   | /wishlist/remove | remove product from wishlist   | ✅     |
+| POST   | /wishlist/clear  | clear wishlist                 | ❌     |
+| POST   | /wishlist/toggle | add/remove product in wishlist | ✅     |
+
+#### TODOS
+
+- Validation Layer [❌]
+
+## Ratings Functionalities
+
+| Method | Endpoint                         | Description                         | Status |
+| ------ | -------------------------------- | ----------------------------------- | ------ |
+| GET    | /products/:productId/ratings     | Get all ratings of specific product | ✅     |
+| POST   | /products/:productId/ratings     | Add a rating to a product           | ✅     |
+| PATCH  | /products/:productId/ratings/:id | Update a rating of a product        | ✅     |
+| DELETE | /products/:productId/ratings/:id | Delete a rating of a product        | ✅     |
+
+#### TODOS
+
+- Validation Layer [❌]

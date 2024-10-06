@@ -22,13 +22,13 @@ class ProductController {
   });
 
   read = catchAsync(async (req: Request, res: Response) => {
-    const { data: products, query } =
+    const { data: products, pagination } =
       await this.productRepository.readWithQueryFeatures({}, req);
 
     console.log("Products", products);
     return apiResponse(res, 200, "All Products fetched", {
       products,
-      pagination: query.pagination,
+      pagination,
     });
   });
 

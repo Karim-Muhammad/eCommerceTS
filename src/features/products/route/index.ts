@@ -1,9 +1,12 @@
+import APIRouter from "../../../common/Router";
+import Storage from "../../../common/Storage";
+
+import guardMiddleware from "../../auth/middleware/guard.middleware";
+
 import ProductController from "../controller";
 import ProductValidation from "../validations";
 
-import APIRouter from "../../../common/Router";
-import guardMiddleware from "../../auth/middleware/guard.middleware";
-import Storage from "../../../common/Storage";
+import reviewsRoute from "../../reviews/route";
 
 const router = new APIRouter();
 const storage = Storage.memoryStorage();
@@ -26,5 +29,8 @@ router.resource("/", ProductController, {
   ],
   delete: [guardMiddleware.guard(), guardMiddleware.only(["admin", "vendor"])],
 });
+
+// Reviews & Ratings
+router.getRouter().use("/:productId", reviewsRoute);
 
 export default router.getRouter();

@@ -17,14 +17,21 @@ class ProductRepository extends Repository<IProductDocument> {
     console.log("Request Query", request.query);
 
     const query = super.read(selector);
-    const enhanceQuery = await new QueryFeatures(query, request.query)
+    const enhanceQuery = await new QueryFeatures<IProductDocument>(
+      query,
+      request.query
+    )
       .all()
       .search(["name"])
       .paginate();
 
     const mongooseQueryResult = await enhanceQuery.mongooseQuery;
 
-    return { data: mongooseQueryResult, query: enhanceQuery };
+    return {
+      data: mongooseQueryResult,
+      query: enhanceQuery.mongooseQuery,
+      pagination: enhanceQuery.pagination,
+    };
   }
 }
 

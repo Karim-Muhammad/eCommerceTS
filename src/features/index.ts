@@ -8,6 +8,7 @@ import products from "./products/route";
 import category from "./category/route";
 import brands from "./brands/route";
 import blogs from "./blogs/route";
+import wishlist from "./wishlist/route";
 
 router.use("/users", user);
 router.use("/auth", auth);
@@ -15,5 +16,6 @@ router.use("/brands", brands);
 router.use("/category", category);
 router.use("/products", products);
 router.use("/blogs", blogs);
+router.use("/wishlist", wishlist);
 
 export default router;

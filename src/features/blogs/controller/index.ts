@@ -19,7 +19,7 @@ class BlogController {
 
   read = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { data: blogs, pagination } =
-      await this.blogRepository.readWithQueryFeatures({}, req.query);
+      await this.blogRepository.readWithQueryFeatures({}, req);
     if (!blogs.length) return next(ErrorAPI.notFound("No blogs up till now"));
 
     return apiResponse(res, 200, "All blogs fetched successfully", {

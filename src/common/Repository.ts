@@ -1,6 +1,7 @@
 import { Document, QueryOptions, type UpdateQuery } from "mongoose";
 import { FilterQuery, Model } from "mongoose";
 import QueryFeatures from "./QueryFeatures";
+import { Request } from "express";
 
 class Repository<T extends Document> {
   private Model: Model<T>;
@@ -47,8 +48,8 @@ class Repository<T extends Document> {
     return this.Model.findOneAndUpdate(
       selector,
       {
-        ...update,
         $set: data,
+        ...update,
       },
       {
         new: true,
@@ -62,19 +63,19 @@ class Repository<T extends Document> {
     return this.Model.find(selector);
   }
 
-  async readWithQueryFeatures(selector: FilterQuery<T>, requestQuery) {
+  async readWithQueryFeatures(selector: FilterQuery<T>, request: Request) {
     const query = this.read(selector);
 
     const { mongooseQuery, pagination } = await new QueryFeatures(
       query,
-      requestQuery
+      request.query
     )
       .all()
       .paginate();
 
     const mongooseResult = await mongooseQuery;
 
-    return { data: mongooseResult, pagination };
+    return { data: mongooseResult, query: mongooseQuery, pagination };
   }
 
   readOne(selector: FilterQuery<T>) {

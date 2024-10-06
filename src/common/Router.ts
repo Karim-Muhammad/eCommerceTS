@@ -1,11 +1,11 @@
-import { RequestHandler, Router } from "express";
+import { RequestHandler, Router, RouterOptions } from "express";
 import { ResourceApiController } from "../@types";
 
 class APIRouter {
   private router: Router;
 
-  constructor() {
-    this.router = Router();
+  constructor(routerOptions?: RouterOptions) {
+    this.router = Router(routerOptions || {});
   }
 
   resource(
