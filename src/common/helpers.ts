@@ -1,3 +1,5 @@
+import { v2 } from "cloudinary";
+
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import path from "path";
 import config from "../../config";
@@ -43,3 +45,13 @@ export const customMessage =
   (value: string, { path }: { path: string }) => {
     return message.replace("{VALUE}", value).replace("{PATH}", path);
   };
+
+export const uploadIntoCloudinary = (() => {
+  v2.config(config.cloudinary);
+  return async (file: Express.Multer.File) => {
+    v2.uploader.upload(file.path, (error, result) => {
+      if (error) throw ErrorAPI.internal(error.message);
+      return result;
+    });
+  };
+})();

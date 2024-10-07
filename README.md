@@ -117,3 +117,35 @@ Link API: https://documenter.getpostman.com/view/23054100/2sAXqv61r7
 #### TODOS
 
 - Validation Layer [❌]
+
+## Coupons Functionalities
+
+| Method | Endpoint         | Description     | Status |
+| ------ | ---------------- | --------------- | ------ |
+| GET    | /coupons         | Get all coupons | ✅     |
+| GET    | /coupons/:id     | Get a coupon    | ✅     |
+| POST   | /coupons         | Create a coupon | ✅     |
+| PATCH  | /coupons/:id     | Update a coupon | ✅     |
+| DELETE | /coupons/:id     | Delete a coupon | ✅     |
+| POST   | /coupons/:id/use | Use a coupon    | ❌     |
+
+| Header Key    | Header Value   | Description  | Status |
+| ------------- | -------------- | ------------ | ------ |
+| Authorization | Bearer {token} | User's token | ✅     |
+
+**Only Admins and Vendors if exist**
+
+#### TODOS
+
+- Validation Layer [❌]
+
+## Uploads Functionalities (as a separate endpoint)
+
+| Method | Endpoint | Description | Status |
+| ------ | -------- | ----------- | ------ |
+| POST   | /uploads | Upload file | ❌     |
+
+#### TODOS
+
+- Add Upload to Cloudinary [❌]
+- Add Validation Layer [❌]
