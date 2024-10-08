@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import ErrorAPI from "../../../common/ErrorAPI";
 import UserRepository from "../repository";
-import { apiResponse } from "../../../common/helpers";
+import { apiResponse, catchAsync } from "../../../common/helpers";
 
 class UserController {
   private readonly userRepository: UserRepository;
@@ -119,6 +119,20 @@ class UserController {
       next(ErrorAPI.internal(error.message));
     }
   };
+
+  changeAddress = catchAsync(async (req: Request, res: Response) => {
+    const { address } = req.body;
+
+    const user = await this.userRepository.change({
+      selector: { _id: req.user.id },
+      data: {},
+      update: { $push: { address: address } },
+    });
+
+    return apiResponse(res, 200, "Address is added successfully", {
+      address: user.address,
+    });
+  });
 }
 
 export default new UserController();

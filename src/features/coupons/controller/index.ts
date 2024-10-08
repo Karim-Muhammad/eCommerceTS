@@ -20,6 +20,7 @@ class CouponController {
       if (!data.expiredAt || isNaN(Date.parse(data.expiredAt)))
         return next(ErrorAPI.badRequest("ExpiredAt is inCorrect"));
 
+      console.log("Data", data);
       const coupon = await this.couponRepository.create({
         ...data,
         user: req.user.id,
@@ -68,6 +69,19 @@ class CouponController {
     await this.couponRepository.delete({ _id: id, user: req.user.id });
 
     return apiResponse(res, 200, "Coupon is deleted successfully");
+  });
+
+  apply = catchAsync(async (req: Request, res: Response) => {
+    const { code, totalOrder } = req.body;
+    const data = await this.couponRepository.applyCoupon(
+      code,
+      req.user,
+      totalOrder
+    );
+
+    return apiResponse(res, 200, "Coupon is applied successfully", {
+      priceAfterDiscount: data,
+    });
   });
 }
 

@@ -85,6 +85,17 @@ class Storage {
     return `.${ext || extFile}`;
   }
 
+  static removeImagesFromStorage(filesPaths: string[]) {
+    filesPaths.forEach((path) => {
+      const fullpath = `${this.destination}/${path}`;
+
+      if (fs.existsSync(fullpath))
+        fs.unlink(fullpath, (err) => {
+          if (err) throw ErrorAPI.internal(err.message);
+        });
+    });
+  }
+
   moveFileBySharp({
     file,
     destination,
@@ -102,10 +113,12 @@ class Storage {
   }
 
   /**
-   * @description is can be usefull before validation, to check if images is set or not
+   * @description is can be usefull before validation, to check if images is set to body or not
    * @param fileFields
    * @returns
    */
+
+  // TODO: Add Uploading into Cloudinary
   prepareUploadFiles = (fileFields: multer.Field[]): RequestHandler => {
     console.log("Fields", fileFields);
 
@@ -121,6 +134,10 @@ class Storage {
 
         console.log("File", file);
 
+        /**
+         * @description if storage is memory, then we need to move files to disk (by sharp package)
+         * @description if storage is disk, then we don't need to move files (already in disk)
+         */
         if (this.type === storageType.MEMORY) {
           file.forEach((f) => {
             const filename = Storage.generateFileName(f).concat(
@@ -183,17 +200,6 @@ class Storage {
       return callback(ErrorAPI.badRequest("File size is too large"));
 
     return callback(null, true);
-  }
-
-  static removeImagesFromStorage(filesPaths: string[]) {
-    filesPaths.forEach((path) => {
-      const fullpath = `${this.destination}/${path}`;
-
-      if (fs.existsSync(fullpath))
-        fs.unlink(fullpath, (err) => {
-          if (err) throw ErrorAPI.internal(err.message);
-        });
-    });
   }
 }
 

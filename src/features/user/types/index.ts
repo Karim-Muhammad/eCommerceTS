@@ -18,6 +18,7 @@ export interface IUser {
   refreshToken: string;
   wishlist: string[];
   address: string[];
+  couponsUsed: string[];
 }
 
 export interface IUserMethods {
@@ -27,6 +28,7 @@ export interface IUserMethods {
   generateRefreshToken: () => Promise<string>;
   generatePasswordResetToken: () => string;
   comparePasswordResetTokenExpiration: (time: number) => boolean;
+  isUsedCoupon: (couponId: string) => boolean;
 }
 
 export interface IUserDocument extends IUser, Document, IUserMethods {
@@ -35,7 +37,6 @@ export interface IUserDocument extends IUser, Document, IUserMethods {
 
 export interface IUserModel extends Model<IUserDocument> {
   // here static methods
-  findByEmail(email: string): Promise<IUserDocument | null>;
   getRefreshToken: (refreshToken: string) => string;
   getPasswordResetToken: (token: string) => string;
 }

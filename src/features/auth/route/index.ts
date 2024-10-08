@@ -4,6 +4,7 @@ import AuthValidations from "../validation";
 import guardMiddleware from "../middleware/guard.middleware";
 import { apiResponse } from "../../../common/helpers";
 import authController from "../controller/auth.controller";
+import userController from "../../user/controller/user.controller";
 
 const router = Router();
 
@@ -46,6 +47,12 @@ router.patch(
   guardMiddleware.guard(),
   AuthValidations.getInstance().changePassword(),
   AuthController.changePassword
+);
+
+router.patch(
+  "/change-address",
+  guardMiddleware.guard(),
+  userController.changeAddress
 );
 
 router.get("/profile", guardMiddleware.guard(), AuthController.profile);

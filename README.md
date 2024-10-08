@@ -138,6 +138,7 @@ Link API: https://documenter.getpostman.com/view/23054100/2sAXqv61r7
 #### TODOS
 
 - Validation Layer [❌]
+- Add CouponUsage Schema (as many-to-many) [❌]
 
 ## Uploads Functionalities (as a separate endpoint)
 

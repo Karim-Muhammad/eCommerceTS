@@ -8,4 +8,8 @@ router.resource("/", CouponController, {
   all: [guardMiddleware.adminGuard()],
 });
 
+router
+  .getRouter()
+  .post("/apply", guardMiddleware.guard(), CouponController.apply);
+
 export default router.getRouter();

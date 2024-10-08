@@ -4,6 +4,18 @@ import UserSchema from "./schema";
 import JWTServices from "../../auth/service/jwt.services";
 import config from "../../../../config";
 
+UserSchema.statics.getRefreshToken = function (refreshToken: string) {
+  return crypto
+    .createHmac("sha256", config.refresh_key)
+    .update(refreshToken)
+    .digest("hex");
+};
+
+UserSchema.statics.getPasswordResetToken = function (token: string) {
+  const resetToken = crypto.createHash("sha256").update(token).digest("hex");
+  return resetToken;
+};
+
 UserSchema.methods.comparePassword = async function (password: string) {
   return await bcrypt.compare(password, this.password);
 };
@@ -57,18 +69,6 @@ UserSchema.methods.comparePasswordResetTokenExpiration = function (
   return this.passwordResetTokenExpires === time;
 };
 
-UserSchema.statics.findByEmail = async function (email) {
-  return await this.findOne({ email });
-};
-
-UserSchema.statics.getRefreshToken = function (refreshToken: string) {
-  return crypto
-    .createHmac("sha256", config.refresh_key)
-    .update(refreshToken)
-    .digest("hex");
-};
-
-UserSchema.statics.getPasswordResetToken = function (token: string) {
-  const resetToken = crypto.createHash("sha256").update(token).digest("hex");
-  return resetToken;
+UserSchema.methods.isUsedCoupon = function (couponId: string) {
+  return this.couponsUsed.includes(couponId);
 };

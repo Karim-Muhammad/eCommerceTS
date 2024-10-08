@@ -65,8 +65,14 @@ const UserSchema = new Schema<IUserType, IUserModel, IUserMethods>({
 
   address: [
     {
+      type: String,
+    },
+  ],
+
+  couponsUsed: [
+    {
       type: Schema.Types.ObjectId,
-      ref: "Address",
+      ref: "Coupon",
     },
   ],
 });
