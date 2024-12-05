@@ -10,7 +10,7 @@ import reviewsRoute from "../../reviews/route";
 
 const router = new APIRouter();
 const storage = Storage.memoryStorage();
-const fileFields = storage.getFileFields({ images: 1 });
+const fileFields = storage.getFileFields({ images: 5 });
 
 router.resource("/", ProductController, {
   create: [

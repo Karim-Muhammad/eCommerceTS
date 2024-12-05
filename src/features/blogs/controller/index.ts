@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { apiResponse, catchAsync } from "../../../common/helpers";
+import {
+  apiResponse,
+  catchAsync,
+  // uploadIntoCloudinary,
+} from "../../../common/helpers";
 import BlogRepository from "../repository/blog.repository";
 import ErrorAPI from "../../../common/ErrorAPI";
 
@@ -10,6 +14,14 @@ class BlogController {
   }
 
   create = catchAsync(async (req: Request, res: Response) => {
+    // const cloudinaryLink = await uploadIntoCloudinary(req.files["image"][0]);
+    // sincie i am using memoryStorage, no Path provided as property, so use `upload_stream`
+    // otherwise, if you used diskStorage, you can use `upload` method and provide the path of the file
+
+    // console.log("Req Files", req.files);
+    // console.log("Body Image", req.body.image);
+    // console.log("Cloudinary Link", cloudinaryLink);
+
     const newBlog = await this.blogRepository.create({
       ...req.body,
       author: req.user.id,

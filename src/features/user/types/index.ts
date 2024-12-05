@@ -1,4 +1,5 @@
 import { Document, Model } from "mongoose";
+import { IAddress } from "../../address/types";
 
 export interface IUser {
   first_name: string;
@@ -17,7 +18,7 @@ export interface IUser {
   status: boolean;
   refreshToken: string;
   wishlist: string[];
-  address: string[];
+  addresses: IAddress[]; // May separate as a new feature with its own model
   couponsUsed: string[];
 }
 
@@ -37,6 +38,7 @@ export interface IUserDocument extends IUser, Document, IUserMethods {
 
 export interface IUserModel extends Model<IUserDocument> {
   // here static methods
+  findByEmail: (email: string) => Promise<IUserDocument>;
   getRefreshToken: (refreshToken: string) => string;
   getPasswordResetToken: (token: string) => string;
 }

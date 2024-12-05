@@ -16,6 +16,10 @@ UserSchema.statics.getPasswordResetToken = function (token: string) {
   return resetToken;
 };
 
+UserSchema.statics.findByEmail = async function (email: string) {
+  return await this.findOne({ email });
+};
+
 UserSchema.methods.comparePassword = async function (password: string) {
   return await bcrypt.compare(password, this.password);
 };

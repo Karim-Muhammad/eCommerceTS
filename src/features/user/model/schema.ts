@@ -63,9 +63,9 @@ const UserSchema = new Schema<IUserType, IUserModel, IUserMethods>({
     },
   ],
 
-  address: [
+  addresses: [
     {
-      type: String,
+      address: String,
     },
   ],
 

@@ -1,4 +1,5 @@
 Link API: https://documenter.getpostman.com/view/23054100/2sAXqv61r7
+TS + Mongoose: https://mongoosejs.com/docs/typescript/statics-and-methods.html
 
 ## Authentication Functionalities
 

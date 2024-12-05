@@ -17,8 +17,6 @@ export const CouponSchema = new Schema<ICoupon, ICouponModel, ICouponMethods>({
   discount: {
     type: Number,
     required: true,
-    min: 0,
-    max: 100,
   },
 
   usageLimit: {

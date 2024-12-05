@@ -7,6 +7,7 @@ import multer, { Multer } from "multer";
 import sharp from "sharp";
 import ErrorAPI from "./ErrorAPI";
 import config from "../../config";
+// import { uploadIntoCloudinary } from "./helpers";
 
 type FileField = {
   [key: string]: number;
@@ -40,7 +41,7 @@ class Storage {
 
   static memoryStorage() {
     const storage = new Storage(multer.memoryStorage());
-    storage.type = storageType.MEMORY;
+    storage.type = storageType.MEMORY; // set type to memory of class instance
     return storage;
   }
 
@@ -96,7 +97,7 @@ class Storage {
     });
   }
 
-  moveFileBySharp({
+  static moveFileBySharp({
     file,
     destination,
     size = [100, 100],
@@ -123,7 +124,7 @@ class Storage {
     console.log("Fields", fileFields);
 
     return (req: Request, _res: Response, next: NextFunction) => {
-      console.log("User", req.user);
+      // console.log("User", req.user);
       console.log("Request Files", req.files);
 
       if (!req.files || Object.values(req.files).length === 0) return next();
@@ -149,7 +150,9 @@ class Storage {
 
             const destination = `${Storage.destination}/${filename}`;
             f["filename"] = filename;
-            this.moveFileBySharp({ file: f, destination });
+            Storage.moveFileBySharp({ file: f, destination });
+            // OR just use
+            // uploadIntoCloudinary(f);
           });
         }
 

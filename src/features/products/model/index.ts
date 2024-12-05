@@ -2,6 +2,7 @@ import { model } from "mongoose";
 
 import { IProductDocument } from "../types";
 import ProductSchema from "./schema";
+
 import "./methods";
 import "./hooks";
 

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { Document, Model } from "mongoose";
 
 export enum DiscountType {
@@ -20,9 +20,9 @@ export interface ICoupon extends Document {
 
 export interface ICouponMethods {
   isExpired: () => boolean;
-  use(total: number): Promise<number>;
+  use(user: Types.ObjectId, total: number): Promise<number>;
+  usedBy(user: Types.ObjectId): Promise<boolean>;
   useWithDestroy(total: number): Promise<number>;
-
   // delete from all users which used this coupon
   destroy(): Promise<void>;
 }

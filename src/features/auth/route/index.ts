@@ -57,6 +57,12 @@ router.patch(
 
 router.get("/profile", guardMiddleware.guard(), AuthController.profile);
 
+router.post(
+  "/profile/add-address",
+  guardMiddleware.guard(),
+  userController.addAddress
+);
+
 router.get("/test-admin", guardMiddleware.adminGuard(), (req, res) =>
   apiResponse(res, 200, "OK")
 );

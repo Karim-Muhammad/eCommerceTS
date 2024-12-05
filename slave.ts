@@ -114,3 +114,28 @@ function main(args) {
 }
 
 main(process.argv);
+
+// node slave.ts feature <feature-name>
+// -> Do you need a Controller?
+// -> Do you need a Repository?
+// -> Do you need Routes?
+// -> Do you need Services?
+// -> Do you need Models?
+// -> Do you need Types?
+
+// Output:
+// -> Created directory: src/features/<feature-name>
+// -> Created index file: src/features/<feature-name>/index.ts
+// -> Created directory: src/features/<feature-name>/controller
+// -> Created index file: src/features/<feature-name>/controller/index.ts
+// -> Created directory: src/features/<feature-name>/repository
+// -> Created index file: src/features/<feature-name>/repository/index.ts
+// -> Created directory: src/features/<feature-name>/route
+// -> Created index file: src/features/<feature-name>/route/index.ts
+// -> Created directory: src/features/<feature-name>/services
+// -> Created index file: src/features/<feature-name>/services/index.ts
+// -> Created directory: src/features/<feature-name>/model
+// -> Created index file: src/features/<feature-name>/model/index.ts
+// -> Created directory: src/features/<feature-name>/types
+// -> Created index file: src/features/<feature-name>/types/index.ts
+// -> Micro-service structure created successfully!

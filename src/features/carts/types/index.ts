@@ -1,4 +1,5 @@
 import mongoose, { Document } from "mongoose";
+import { IProduct } from "../../products/types";
 
 export interface ICart extends Document {
   _id: string;
@@ -6,10 +7,9 @@ export interface ICart extends Document {
   user: mongoose.Types.ObjectId; // user id
 
   products: {
-    product: mongoose.Types.ObjectId; // product id
+    product: mongoose.Types.ObjectId | IProduct; // product id
     quantity: number;
     color: string;
-    price: number;
   }[]; // product ids
 
   totalPurePrice: number;

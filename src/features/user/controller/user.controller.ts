@@ -121,16 +121,33 @@ class UserController {
   };
 
   changeAddress = catchAsync(async (req: Request, res: Response) => {
+    const { address, addressId } = req.body;
+    // const { id: addressId } = req.params;
+
+    const user = await this.userRepository.change({
+      selector: { _id: req.user.id, "addresses._id": addressId },
+      data: {},
+      update: { $set: { "addresses.$": { address } } },
+    });
+
+    console.log("User", user);
+
+    return apiResponse(res, 200, "Address is changed successfully", {
+      addresses: user.addresses,
+    });
+  });
+
+  addAddress = catchAsync(async (req: Request, res: Response) => {
     const { address } = req.body;
 
     const user = await this.userRepository.change({
       selector: { _id: req.user.id },
       data: {},
-      update: { $push: { address: address } },
+      update: { $push: { addresses: { address } } },
     });
 
     return apiResponse(res, 200, "Address is added successfully", {
-      address: user.address,
+      addresses: user.addresses,
     });
   });
 }

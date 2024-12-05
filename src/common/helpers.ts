@@ -46,12 +46,31 @@ export const customMessage =
     return message.replace("{VALUE}", value).replace("{PATH}", path);
   };
 
+/**
+ * @returns Promise<[secure_url, url, ...]> as Result of Upload Stream
+ */
 export const uploadIntoCloudinary = (() => {
   v2.config(config.cloudinary);
   return async (file: Express.Multer.File) => {
-    v2.uploader.upload(file.path, (error, result) => {
-      if (error) throw ErrorAPI.internal(error.message);
-      return result;
+    // console.log("Cloudinary File", file);
+    // console.log("File Path", file.path);
+
+    // ``, ${Storage.destination}/${file.filename}
+    return new Promise((resolve, reject) => {
+      v2.uploader
+        .upload_stream(
+          { folder: "digitic-blog-images", public_id: file.filename },
+          (error, result) => {
+            if (error) {
+              return reject(ErrorAPI.internal(error.message));
+            }
+
+            console.log("Result", [result.secure_url, result.url]);
+
+            return resolve(result);
+          }
+        )
+        .end(file.buffer);
     });
   };
-})();
+})(); // IIFE

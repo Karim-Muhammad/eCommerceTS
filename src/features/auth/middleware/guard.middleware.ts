@@ -41,8 +41,8 @@ class GuardMiddlewares {
         );
 
       // 4. Check if PasswordChangedAt updated than `iat` of token
-      console.log("Token iat: ", payload.iat);
-      console.log("PasswordChangedAt: ", user.passwordChangedAt);
+      // console.log("Token iat: ", payload.iat);
+      // console.log("PasswordChangedAt: ", user.passwordChangedAt);
 
       if (!user.isTokenUpToDate(payload.iat)) {
         return next(
