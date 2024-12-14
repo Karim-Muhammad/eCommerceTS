@@ -7,6 +7,11 @@ import multer, { Multer } from "multer";
 import sharp from "sharp";
 import ErrorAPI from "./ErrorAPI";
 import config from "../../config";
+import {
+  handleStorageByCloudinary,
+  // handleStorageForMemoryStorage,
+} from "./helpers";
+import { UploadApiResponse } from "cloudinary";
 // import { uploadIntoCloudinary } from "./helpers";
 
 type FileField = {
@@ -123,52 +128,66 @@ class Storage {
   prepareUploadFiles = (fileFields: multer.Field[]): RequestHandler => {
     console.log("Fields", fileFields);
 
-    return (req: Request, _res: Response, next: NextFunction) => {
+    return async (req: Request, _res: Response, next: NextFunction) => {
       // console.log("User", req.user);
       console.log("Request Files", req.files);
 
       if (!req.files || Object.values(req.files).length === 0) return next();
 
-      fileFields.forEach((field) => {
+      const promisfyOperations = fileFields.map((field) => {
         const fileCount = field.maxCount;
-        const file: Express.Multer.File[] = req.files[field.name];
+        const files: Express.Multer.File[] = req.files[field.name];
 
-        console.log("File", file);
+        console.log("Files", files);
 
         /**
          * @description if storage is memory, then we need to move files to disk (by sharp package)
          * @description if storage is disk, then we don't need to move files (already in disk)
          */
         if (this.type === storageType.MEMORY) {
-          file.forEach((f) => {
-            const filename = Storage.generateFileName(f).concat(
-              Storage.generateFileExt(f)
-            );
+          // Local Upload
+          // handleStorageForMemoryStorage(files);
+          // Remote Upload
+          return handleStorageByCloudinary(files).then(
+            (result: UploadApiResponse[]) => {
+              // console.log("_Res", res);
+              // console.log("_files", files);
 
-            if (!fs.existsSync(Storage.destination))
-              fs.mkdirSync(Storage.destination, { recursive: true });
+              if (fileCount)
+                req.body[field.name] =
+                  field.maxCount !== 1
+                    ? result.map((f) => `${f.public_id}.${f.format}`)
+                    : [`${result[0].public_id}.${result[0].format}`];
 
-            const destination = `${Storage.destination}/${filename}`;
-            f["filename"] = filename;
-            Storage.moveFileBySharp({ file: f, destination });
-            // OR just use
-            // uploadIntoCloudinary(f);
-          });
+              console.log("Request Body", req.body);
+            }
+          );
         }
 
-        // console.log("Field Name", field.name);
-        // console.log("File Count", fileCount);
-        // console.log("Files", req.files);
-        // console.log("File", req.files[field.name]);
+        /**
+         * console.log("Field Name", field.name);
+         * console.log("File Count", fileCount);
+         * console.log("Files", req.files);
+         * console.log("File", req.files[field.name]);
+         */
 
-        if (fileCount)
-          req.body[field.name] =
-            field.maxCount !== 1
-              ? file.map((f) => f.filename)
-              : file[0].filename;
+        // just store location in request body (in case we use our disk as storage)
+        // but if we want to upload images into cloudinary, we need more than location
+        console.log("Request Body", req.body);
+        console.log("Files", files);
+
+        if (this.type === storageType.DISK) {
+          if (fileCount)
+            req.body[field.name] =
+              field.maxCount !== 1
+                ? files.map((f) => f.filename)
+                : files[0].filename;
+        }
       });
 
-      next();
+      await Promise.all(promisfyOperations)
+        .then(() => next())
+        .catch((err) => next(err));
     };
   };
 
@@ -207,3 +226,10 @@ class Storage {
 }
 
 export default Storage;
+
+/**
+ * cloudinary.v2.api
+  .delete_resources(['digitic-blog-images/node3-1733068401308-afb57713-ae75-468e-ac20-473c9304a9e5.png', 'digitic-blog-images/node3-1733066787647-8f85dab0-7bb9-46ba-829f-9c72a09f8726.png', 'digitic-blog-images/node3-1733066638096-db566151-3308-4d22-9355-6869f6107ab7.png', 'digitic-blog-images/node3-1733066471911-24541b88-0ee6-4852-b581-024eb3ebf127.png', 'digitic-blog-images/node3-1733066412792-de46b0ee-3bf8-4e51-9256-325e9bb30d0b.png', 'digitic-blog-images/node3-1733065418260-cfa17a14-b36b-4506-9e0e-0aa45514fd81.png', 'digitic-blog-images/node3-1733064587818-64034409-fd57-4d5e-a6b7-508396145798.png'], 
+    { type: 'upload', resource_type: 'image' })
+  .then(console.log);
+ */

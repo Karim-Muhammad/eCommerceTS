@@ -1,9 +1,11 @@
-import { v2 } from "cloudinary";
+import { UploadApiResponse, v2 } from "cloudinary";
 
 import { NextFunction, Request, RequestHandler, Response } from "express";
+import fs from "fs";
 import path from "path";
 import config from "../../config";
 import ErrorAPI from "./ErrorAPI";
+import Storage from "./Storage";
 
 export const serveStaticFiles = (folder): string =>
   path.join(`${config.root}/static/${folder}`);
@@ -66,6 +68,7 @@ export const uploadIntoCloudinary = (() => {
             }
 
             console.log("Result", [result.secure_url, result.url]);
+            file.filename = result.secure_url;
 
             return resolve(result);
           }
@@ -74,3 +77,57 @@ export const uploadIntoCloudinary = (() => {
     });
   };
 })(); // IIFE
+
+/**
+ * @description if storage's kind of `memory` then it will generate `filename` + `ext` for each file
+ * and check if destination exists so move file to existing destination by `sharp`, if not exist, create destination by `fs`.
+ *
+ * @param files: Uploaded files
+ */
+export const handleStorageForMemoryStorage = (files: Express.Multer.File[]) => {
+  files.forEach((file) => {
+    const filename = Storage.generateFileName(file).concat(
+      Storage.generateFileExt(file)
+    );
+
+    if (!fs.existsSync(Storage.destination))
+      fs.mkdirSync(Storage.destination, { recursive: true });
+
+    const destination = `${Storage.destination}/${filename}`;
+    file["filename"] = filename;
+    Storage.moveFileBySharp({ file, destination });
+    // OR just use
+    // uploadIntoCloudinary(f);
+  });
+};
+
+export const handleStorageByCloudinary = async (
+  files: Express.Multer.File[]
+) => {
+  const promisfyUploadingOperation = files.map((file: Express.Multer.File) => {
+    return uploadIntoCloudinary(file);
+  });
+
+  return await Promise.all(promisfyUploadingOperation)
+    .then((result: UploadApiResponse[]) => {
+      console.log("All files uploaded successfully to cloudinary");
+      console.log("RESULT", result);
+
+      return result;
+    })
+    .catch((error) => {
+      console.error("Error occurred while uploading to cloudinary", error);
+    });
+};
+
+export const destroyFileFromCloudinary = (filePublicId: string) => {
+  return v2.uploader
+    .destroy(filePublicId, { type: "upload" })
+    .then((result) => {
+      console.log("All files uploaded successfully to cloudinary", result);
+      return result;
+    })
+    .catch((error) => {
+      console.error("Error occurred while deleting from cloudinary", error);
+    });
+};

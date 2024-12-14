@@ -7,7 +7,7 @@ export interface IProduct {
   price: number;
   category: [Schema.Types.ObjectId];
   brand: Schema.Types.ObjectId;
-  images: [string];
+  images: string[];
   colors: [
     {
       name: string;
@@ -34,6 +34,7 @@ export interface IProduct {
 
 export interface IProductMethods {
   updateAverageRatings: () => Promise<void>;
+  destroyImages: () => Promise<void>;
 }
 
 export interface IProductDocument extends IProduct, Document, IProductMethods {}

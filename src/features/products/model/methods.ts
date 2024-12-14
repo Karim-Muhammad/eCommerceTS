@@ -1,3 +1,4 @@
+import { destroyFileFromCloudinary } from "../../../common/helpers";
 import ProductSchema from "./schema";
 
 ProductSchema.methods.updateAverageRatings = async function () {
@@ -10,4 +11,22 @@ ProductSchema.methods.updateAverageRatings = async function () {
   });
 
   this.averageRatings = totalStars / ratingsCount;
+};
+
+ProductSchema.methods.destroyImages = async function () {
+  const promisfyOperations = this.images.map((image) => {
+    const fileNameImage = image.split(".")[0]; ///[digitic-blog-images/hsbcza9japfnvjrhkibb].png
+
+    console.log("Filename: " + fileNameImage);
+    return destroyFileFromCloudinary(fileNameImage);
+  });
+
+  await Promise.all(promisfyOperations)
+    .then((result) => {
+      console.log("All images deleted successfully", result);
+    })
+    .catch((error) => {
+      console.error("Error deleting images", error);
+      throw new Error("Error deleting images");
+    });
 };

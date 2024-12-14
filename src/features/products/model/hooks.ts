@@ -1,6 +1,13 @@
 import slugify from "slugify";
 import ProductSchema from "./schema";
 import ProductModel from ".";
+import config from "../../../../config";
+
+ProductSchema.post("init", function () {
+  this.images = this.images.map(function (img) {
+    return `${config.cloudinary.resource_link}/${img}`;
+  });
+});
 
 ProductSchema.pre("validate", function (next) {
   if (this.isModified("name")) {

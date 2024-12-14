@@ -1,6 +1,11 @@
 import { Request, Response } from "express";
 import ProductRepository from "../repository";
-import { apiResponse, catchAsync } from "../../../common/helpers";
+import {
+  apiResponse,
+  catchAsync,
+  destroyFileFromCloudinary,
+  // destroyFileFromCloudinary,
+} from "../../../common/helpers";
 
 class ProductController {
   private productRepository: ProductRepository;
@@ -55,7 +60,32 @@ class ProductController {
 
   delete = catchAsync(async (req: Request, res: Response) => {
     const product = await this.productRepository.delete({ _id: req.params.id });
+    product.destroyImages();
     return apiResponse(res, 204, "Product deleted successfully!", { product });
+  });
+
+  deleteImage = catchAsync(async (req: Request, res: Response) => {
+    const { productId } = req.params;
+    const { imageId } = req.body;
+
+    await this.productRepository.update(
+      { _id: productId },
+      {},
+      { new: true },
+      {
+        $pull: { images: imageId },
+      }
+    );
+
+    await destroyFileFromCloudinary(imageId.split(".")[0])
+      .then((result) => {
+        console.log("Image deleted from cloudinary", result);
+        return apiResponse(res, 204, "Image deleted successfully!");
+      })
+      .catch((error) => {
+        console.error("Error deleting image from cloudinary:", error);
+        return apiResponse(res, 500, "Error deleting image from cloudinary");
+      });
   });
 
   static getInstance = () => {

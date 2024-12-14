@@ -30,6 +30,8 @@ router.resource("/", ProductController, {
   delete: [guardMiddleware.guard(), guardMiddleware.only(["admin", "vendor"])],
 });
 
+router.getRouter().delete("/:productId/image", ProductController.deleteImage);
+
 // Reviews & Ratings
 router.getRouter().use("/:productId", reviewsRoute);
 
