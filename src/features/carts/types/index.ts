@@ -30,6 +30,7 @@ export interface ICartMethods {
   ) => Promise<void>;
   removeProduct: (productId: string) => Promise<void>;
   clearCart: () => Promise<void>;
+  finalPrice: () => number;
 }
 
 export interface ICartDocument extends ICart, ICartMethods {}
